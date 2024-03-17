@@ -41,9 +41,29 @@ module.exports = function(sequelize, DataTypes) {
         Client.belongsTo(models.PhoneOperator, {
             foreignKey: "assignedOperator"
         });
-
+    
         Client.belongsTo(models.Client, {
             foreignKey: "referredBy"
+        });
+
+        Client.belongsTo(models.Sale, {
+            foreignKey: "referredInSale"
+        });
+
+        Client.hasMany(models.Client, {
+            foreignKey: "referredBy"
+        });
+
+        Client.hasMany(models.Call, {
+            foreignKey: "client"
+        });
+
+        Client.hasMany(models.Meeting, {
+            foreignKey: "client"
+        });
+
+        Client.hasOne(models.Sale, {
+            foreignKey: "client"
         });
     }
 

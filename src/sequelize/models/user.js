@@ -40,7 +40,34 @@ module.exports = function(sequelize, DataTypes) {
         User.hasMany(models.PhoneOperator, {
             foreignKey: "operator_id"
         });
-        // ...
+       
+        User.hasMany(models.SalesAgent, {
+            foreignKey: "agent_id"
+        });
+
+        User.hasMany(models.MarketingManager, {
+            foreignKey: "manager_id"
+        });
+        
+        User.hasMany(models.ChiefOfOperations, {
+            foreignKey: "chief_id"
+        });
+
+        User.hasMany(models.Installer, {
+            foreignKey: "installer_id"
+        });
+
+        User.hasMany(models.Meeting, {
+            foreignKey: "worker"
+        });
+
+        User.hasMany(models.Commission, {
+            foreignKey: "userPaidTo"
+        });
+
+        User.hasOne(models.Inventory, {
+            foreignKey: "manager"
+        })
     }
 
     return User;

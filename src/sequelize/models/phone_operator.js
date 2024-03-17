@@ -7,12 +7,20 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     PhoneOperator.associate = function(models) {
+        PhoneOperator.belongsTo(models.User, {
+            foreignKey: "operator_id"
+        });
+
+        PhoneOperator.hasMany(models.Call, {
+            foreignKey: "phoneOperator"
+        });
+        
         PhoneOperator.hasMany(models.Client, {
             foreignKey: "assignedOperator"
         });
-        
-        PhoneOperator.belongsTo(models.User, {
-            foreignKey: "operator_id"
+
+        PhoneOperator.hasMany(models.Meeting, {
+            foreignKey: "phoneOperator"
         });
     }
 
