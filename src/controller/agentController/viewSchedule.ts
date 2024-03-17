@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-export function addSchedule(req: Request, res: Response) {
-    const { agent_id } = req.body;
+export function viewSchedule(req: Request, res: Response) {
+    const { agentId } = req.body;
     try {
         // const response = Schedule.get(agent_id);
         // res.status(201).json({response});
