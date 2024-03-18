@@ -38,6 +38,7 @@ export class UserRepository implements IUserRepository {
         if (userObj != null) {
             return await userObj.update(userData);
         } else {
+            // TODO - retrieve id after creating
             return await this.models.User.create(userData);
         }
     }
