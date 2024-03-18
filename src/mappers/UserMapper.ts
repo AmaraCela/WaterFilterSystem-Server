@@ -14,7 +14,7 @@ export class UserMapper {
 
     public static toPersistence(user: User): any {
         return {
-            id: user.id,
+            //user_id: user.id,
             name: user.name,
             surname: user.surname,
             email: user.email,

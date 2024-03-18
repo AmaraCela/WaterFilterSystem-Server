@@ -28,17 +28,15 @@ export class UserRepository implements IUserRepository {
     }
 
     async save(user: User): Promise<any> {
-        const userExists = await this.exists(user);
+        const userObj = await this.models.User.findOne({
+            where: {
+                email: user.email
+            }
+        });
+
         const userData = UserMapper.toPersistence(user);
-
-        if (userExists) {
-            const userToUpdate = await this.models.User.findOne({
-                where: {
-                    user_id: user.id
-                }
-            });
-
-            return await userToUpdate.update(userData);
+        if (userObj != null) {
+            return await userObj.update(userData);
         } else {
             return await this.models.User.create(userData);
         }

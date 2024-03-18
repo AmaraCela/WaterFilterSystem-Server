@@ -3,7 +3,7 @@ module.exports = function(sequelize, DataTypes) {
         commission_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoincrement: true
+            autoIncrement: true
         },
         approved: {
             type: DataTypes.BOOLEAN,

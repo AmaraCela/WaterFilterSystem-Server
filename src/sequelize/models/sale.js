@@ -3,7 +3,7 @@ module.exports = function(sequelize, DataTypes) {
         sale_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoincrement: true
+            autoIncrement: true
         },
         time: {
             type: DataTypes.DATE,

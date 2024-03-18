@@ -1,19 +1,27 @@
-import express, { Express } from "express";
-import db  from "./sequelize/models/index.js";
-const port = 5000;
+const express = require('express');
+const app = express();
 
-const app: Express = express();
+const db = require("./sequelize/models");
 
-app.listen(port, () => {
-    console.log('Server is listening on port', port);
-})
+// require("./repos");
+// require("./models");
 
-app.get('/', (req, res) => res.send('Heyy'))
+import { UserRepository } from "./repos/UserRepository";
+import { PhoneOperator } from "./models/PhoneOperator";
 
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
+    //db.sequelize.drop(); // drop all tables
 }).then(() => {
-    db.sequelize.sync(); 
+    db.sequelize.sync(true);
+}).then(() => {
+    const userRepository = new UserRepository(db);
+    const operator = new PhoneOperator("John", "Doe", "john.doe@example.com", "password"); 
+    userRepository.save(operator);
 }).catch((err: any) => {
     console.log("Error: " + err);
+})
+
+app.listen(5000, () => {
+    console.log(`Server is running on port 5000`);
 })

@@ -18,3 +18,4 @@ index_js_1.default.sequelize.authenticate().then(() => {
 }).catch((err) => {
     console.log("Error: " + err);
 });
+

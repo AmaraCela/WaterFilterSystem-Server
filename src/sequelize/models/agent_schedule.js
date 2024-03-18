@@ -3,7 +3,7 @@ module.exports = function(sequelize, DataTypes) {
         schedule_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoincrement: true
+            autoIncrement: true
         },
         dayOfTheWeek: {
             type: DataTypes.STRING,

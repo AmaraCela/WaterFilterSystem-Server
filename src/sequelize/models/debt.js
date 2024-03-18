@@ -3,7 +3,7 @@ module.exports = function(sequelize, DataTypes) {
         debt_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoincrement: true
+            autoIncrement: true
         },
         nextPayment: {
             type: DataTypes.DATE
