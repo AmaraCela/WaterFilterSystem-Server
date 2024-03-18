@@ -8,6 +8,8 @@ const db = require("./sequelize/models");
 
 import { UserRepository } from "./repos/UserRepository";
 import { PhoneOperator } from "./models/PhoneOperator";
+import { addOperator } from "./controller/addOperator";
+app.post('/addOperator', addOperator);
 
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
@@ -15,9 +17,9 @@ db.sequelize.authenticate().then(() => {
 }).then(() => {
     db.sequelize.sync(true);
 }).then(() => {
-    const userRepository = new UserRepository(db);
-    const operator = new PhoneOperator("John", "Doe", "john.doe@example.com", "password"); 
-    userRepository.save(operator);
+    // const userRepository = new UserRepository(db);
+    // const operator = new PhoneOperator("John", "Doe", "john.doe@example.com", "password"); 
+    // userRepository.save(operator);
 }).catch((err: any) => {
     console.log("Error: " + err);
 })
