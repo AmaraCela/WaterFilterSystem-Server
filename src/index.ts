@@ -1,4 +1,4 @@
-import express from 'express';
+const express = require('express');
 const app = express();
 
 const db = require("./sequelize/models");
@@ -11,7 +11,7 @@ import { PhoneOperator } from "./models/PhoneOperator";
 
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
-    //db.sequelize.drop(); // drop all tables
+    // db.sequelize.drop(); // drop all tables
 }).then(() => {
     db.sequelize.sync(true);
 }).then(() => {
