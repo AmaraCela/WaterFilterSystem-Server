@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import user from "../sequelize/models/user";
 
 export async function addOperator(req, res) {
