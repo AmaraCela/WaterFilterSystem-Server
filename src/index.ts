@@ -9,7 +9,10 @@ const db = require("./sequelize/models");
 import { UserRepository } from "./repos/UserRepository";
 import { PhoneOperator } from "./models/PhoneOperator";
 import { addOperator } from "./controller/addOperator";
+import { addSchedule } from "./controller/agentController/addSchedule";
+app.use(express.json());
 app.post('/addOperator', addOperator);
+app.post('/addSchedule', addSchedule);
 
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
