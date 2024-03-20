@@ -18,7 +18,8 @@ module.exports = function(sequelize, DataTypes) {
             defaultValue: false
         },
         outcomeComment: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            defaultValue: ''
         }
     });
 
