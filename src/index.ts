@@ -1,13 +1,7 @@
 const express = require('express');
 const app = express();
-
 const db = require("./sequelize/models");
 
-// require("./repos");
-// require("./models");
-
-import { UserRepository } from "./repos/UserRepository";
-import { PhoneOperator } from "./models/PhoneOperator";
 import { addOperator } from "./controller/addOperator";
 import { addSchedule } from "./controller/agentController/addSchedule";
 app.use(express.json());
@@ -18,11 +12,9 @@ db.sequelize.authenticate().then(() => {
     console.log("Database connected");
     // db.sequelize.drop(); // drop all tables
 }).then(() => {
-    db.sequelize.sync(true);
+    db.sequelize.sync();
 }).then(() => {
-    // const userRepository = new UserRepository(db);
-    // const operator = new PhoneOperator("John", "Doe", "john.doe@example.com", "password"); 
-    // userRepository.save(operator);
+
 }).catch((err: any) => {
     console.log("Error: " + err);
 })
