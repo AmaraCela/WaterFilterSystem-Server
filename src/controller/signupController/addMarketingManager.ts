@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../repos/UserRepository";
+import { UserRepository } from "../../repos/UserRepository";
 import bcrypt from "bcryptjs";
-import db from "../sequelize/models";
-import { MarketingManager } from "../models/MarketingManager";
+import db from "../../sequelize/models";
+import { MarketingManager } from "../../models/MarketingManager";
 
 export async function addMarketingManager(req: Request, res: Response) {
     const { name, surname, email, password } = req.body;

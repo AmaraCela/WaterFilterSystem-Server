@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../repos/UserRepository";
+import { UserRepository } from "../../repos/UserRepository";
 import bcrypt from "bcryptjs";
-import db from "../sequelize/models";
-import { InventoryManager } from "../models/InventoryManager";
+import db from "../../sequelize/models";
+import { InventoryManager } from "../../models/InventoryManager";
 
 export async function addInventoryManager(req: Request, res: Response) {
     const { name, surname, email, password } = req.body;

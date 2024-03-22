@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../repos/UserRepository";
-import { PhoneOperator } from "../models/PhoneOperator";
+import { UserRepository } from "../../repos/UserRepository";
+import { PhoneOperator } from "../../models/PhoneOperator";
 import bcrypt from "bcryptjs";
 
-import db from "../sequelize/models";
+import db from "../../sequelize/models";
 
 export async function addOperator(req: Request, res: Response) {
     const { name, surname, email, password } = req.body;

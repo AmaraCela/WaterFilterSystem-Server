@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../repos/UserRepository";
+import { UserRepository } from "../../repos/UserRepository";
 import bcrypt from "bcryptjs";
-import db from "../sequelize/models";
-import { Installer } from "../models/Installer";
+import db from "../../sequelize/models";
+import { Installer } from "../../models/Installer";
 
 export async function addInstaller(req: Request, res: Response) {
     const { name, surname, email, password } = req.body;

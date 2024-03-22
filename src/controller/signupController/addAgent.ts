@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../repos/UserRepository";
+import { UserRepository } from "../../repos/UserRepository";
 import bcrypt from "bcryptjs";
 
-import db from "../sequelize/models";
-import { SalesAgent } from "../models/SalesAgent";
+import db from "../../sequelize/models";
+import { SalesAgent } from "../../models/SalesAgent";
 
 export async function addAgent(req: Request, res: Response) {
     const { name, surname, email, password } = req.body;

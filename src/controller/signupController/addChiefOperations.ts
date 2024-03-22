@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../repos/UserRepository";
+import { UserRepository } from "../../repos/UserRepository";
 import bcrypt from "bcryptjs";
-import db from "../sequelize/models";
-import { ChiefOperations } from "../models/ChiefOperations";
+import db from "../../sequelize/models";
+import { ChiefOperations } from "../../models/ChiefOperations";
 
 export async function addChiefOperations(req: Request, res: Response) {
     const { name, surname, email, password } = req.body;

@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const db = require("./sequelize/models");
-import { addOperator } from "./controller/addOperator";
+import { addOperator } from "./controller/signupController/addOperator";
 import { addSchedule } from "./controller/agentController/addSchedule";
 import { loginUser } from "./controller/loginController";
 
