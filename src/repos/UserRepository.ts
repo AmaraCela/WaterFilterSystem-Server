@@ -1,6 +1,7 @@
 import { IUserRepository } from './IUserRepository';
 import { User } from "../models/User";
 import { UserMapper } from '../mappers/UserMapper';
+import bcrypt from "bcryptjs";
 
 export class UserRepository implements IUserRepository {
     private models: any;
@@ -8,6 +9,7 @@ export class UserRepository implements IUserRepository {
     constructor (models: any) {
         this.models = models;
     }
+
 
     async exists(user: User): Promise<boolean> {
         const userExists = await this.models.User.findOne({
@@ -49,5 +51,17 @@ export class UserRepository implements IUserRepository {
                 user_id: id
             }
         });
+    }
+
+
+    async login(email: string, password: string) {
+        const user = await this.models.User.findOne({
+            where: {
+                email: email
+            }
+        });
+
+        const result = await bcrypt.compare(password, user.passwordHash);
+        return result ? user : 'Error logging in the user.';  
     }
 }
