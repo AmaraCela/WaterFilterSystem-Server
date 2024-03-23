@@ -3,7 +3,12 @@ module.exports = function(sequelize, DataTypes) {
         user_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
+            validate: {
+                isInt: {
+                    msg: "User ID must be a number"
+                }
+            }
         },
         name: {
             type: DataTypes.STRING,
@@ -16,7 +21,14 @@ module.exports = function(sequelize, DataTypes) {
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true
+            validate: {
+                isEmail: {
+                    msg: 'Invalid email address'
+                }
+            },
+            unique: {
+                msg: 'Email address already in use'
+            }
         },
         passwordHash: {
             type: DataTypes.STRING,
@@ -38,23 +50,33 @@ module.exports = function(sequelize, DataTypes) {
 
     User.associate = function(models) {
         User.hasMany(models.PhoneOperator, {
-            foreignKey: "operator_id"
+            foreignKey: "operator_id", 
+            onDelete: "CASCADE",
+            hooks: true
         });
        
         User.hasMany(models.SalesAgent, {
-            foreignKey: "agent_id"
+            foreignKey: "agent_id",
+            onDelete: "CASCADE",
+            hooks: true
         });
 
         User.hasMany(models.MarketingManager, {
-            foreignKey: "manager_id"
+            foreignKey: "manager_id",
+            onDelete: "CASCADE",
+            hooks: true
         });
         
         User.hasMany(models.ChiefOfOperations, {
-            foreignKey: "chief_id"
+            foreignKey: "chief_id",
+            onDelete: "CASCADE",
+            hooks: true
         });
 
         User.hasMany(models.Installer, {
-            foreignKey: "installer_id"
+            foreignKey: "installer_id",
+            onDelete: "CASCADE",
+            hooks: true
         });
 
         User.hasMany(models.Meeting, {
