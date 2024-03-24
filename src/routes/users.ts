@@ -3,15 +3,15 @@ const router = express.Router();
 
 import { getAllUsers, getUserById, deleteUser, idValidator, userValidator } from "../controllers/UserController";
 import { getAllPhoneOperators, addPhoneOperator, updatePhoneOperator } from "../controllers/PhoneOperatorController";
-import { validateRequest } from "../utils/ErrorHandler";
+import { handleInputValidationErrors } from "../controllers/utils/ErrorHandler";
 
 router.get("/phoneoperators", getAllPhoneOperators);
-router.post("/phoneoperators", userValidator, validateRequest, addPhoneOperator);
-router.put("/phoneoperators/:id", idValidator, userValidator, validateRequest, updatePhoneOperator);
+router.post("/phoneoperators", userValidator, handleInputValidationErrors, addPhoneOperator);
+router.put("/phoneoperators/:id", idValidator, userValidator, handleInputValidationErrors, updatePhoneOperator);
 
 router.get("/", getAllUsers);
-router.get("/:id", idValidator, validateRequest, getUserById);
-router.delete("/:id", idValidator, validateRequest, deleteUser);
+router.get("/:id", idValidator, handleInputValidationErrors, getUserById);
+router.delete("/:id", idValidator, handleInputValidationErrors, deleteUser);
 
 // router.get("/chiefs", getAllChiefs);
 // router.post("/chiefs", addChief);

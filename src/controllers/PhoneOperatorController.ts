@@ -4,7 +4,7 @@ import { PhoneOperatorRepository } from "../repos/PhoneOperatorRepository";
 import { PhoneOperator } from "../models/PhoneOperator";
 import { UserRole } from "../enums/UserRole";
 import { UserMapper } from "../mappers/UserMapper";
-import { handleError } from "../utils/ErrorHandler";
+import { handleException } from "./utils/ErrorHandler";
 import db from "../sequelize/models";
 
 import bcrypt from "bcryptjs";
@@ -32,7 +32,7 @@ export async function addPhoneOperator(req: Request, res: Response) {
 
         res.status(201).json(PhoneOperatorMapper.toDTO(user));
     } catch (error) {
-        handleError(res, error);  
+        handleException(res, error);  
     }
 }
 
@@ -60,6 +60,6 @@ export async function updatePhoneOperator(req: Request, res: Response) {
         }
     }
     catch (error) {
-        handleError(res, error);
+        handleException(res, error);
     }
 }

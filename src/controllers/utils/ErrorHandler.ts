@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { ValidationError } from "sequelize";
 
-export function handleError(res: Response, error: any) {
+export function handleException(res: Response, error: any) {
     let message: any = "Unknown error occurred";
     let errors: any = {};
 
@@ -27,7 +27,7 @@ export function handleError(res: Response, error: any) {
     }  
 }
 
-export function validateRequest(req: Request, res: Response, next: any) {
+export function handleInputValidationErrors(req: Request, res: Response, next: any) {
     const { validationResult } = require('express-validator');
     const error = validationResult(req);
     if (!error.isEmpty()) {

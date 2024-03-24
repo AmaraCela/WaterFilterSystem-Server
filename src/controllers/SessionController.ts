@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repos/UserRepository";
-import { handleError } from "../utils/ErrorHandler";
+import { handleException } from "./utils/ErrorHandler";
 
 import bcrypt from "bcryptjs";
 
@@ -36,6 +36,6 @@ export async function createSession(req: Request, res: Response) {
         res.json({ token });
     }
     catch (error) {
-        handleError(res, error);
+        handleException(res, error);
     }
 }

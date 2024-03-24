@@ -5,7 +5,7 @@ import { PhoneOperatorMapper } from "../mappers/PhoneOperatorMapper";
 
 import db from "../sequelize/models";
 
-import { handleError } from "../utils/ErrorHandler";
+import { handleException } from "./utils/ErrorHandler";
 
 const { param, body } = require('express-validator');
 export const idValidator = [
@@ -39,7 +39,7 @@ export async function getUserById(req: Request, res: Response) {
         res.status(200).json(UserMapper.toDTO(user));
     }
     catch (error) {
-        handleError(res, error);
+        handleException(res, error);
     }
 }
 
@@ -59,6 +59,6 @@ export async function deleteUser(req: Request, res: Response) {
         res.status(204).send();
     }
     catch (error) {
-        handleError(res, error);
+        handleException(res, error);
     }
 }
