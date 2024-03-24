@@ -11,13 +11,13 @@ const { param, body } = require('express-validator');
 export const idValidator = [
     param('id').exists().isInt().withMessage("Invalid user id")
 ]
+
 export const userValidator = [
     body('name').exists().withMessage("Name field required"),
     body('surname').exists().withMessage("Surname field required"),
     body('email').exists().isEmail().withMessage("Email field missing or invalid"),
     body('password').exists().withMessage("Password field required")
 ]
-
 
 export async function getAllUsers(req: Request, res: Response) {
     const userRepository = new UserRepository(db);

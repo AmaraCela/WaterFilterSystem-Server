@@ -7,6 +7,13 @@ import bcrypt from "bcryptjs";
 const db = require("../sequelize/models");
 const jwt = require('jsonwebtoken');
 
+const { param, body } = require('express-validator');
+
+export const loginValidator = [
+    body('email').exists().isEmail().withMessage("Email field missing or invalid"),
+    body('password').exists().withMessage("Password field required")
+]
+
 export async function createSession(req: Request, res: Response) {
     const { email, password } = req.body;
     const userRepository = new UserRepository(db);

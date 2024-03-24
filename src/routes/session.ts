@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-import { createSession } from "../controllers/SessionController";
+import { createSession, loginValidator } from "../controllers/SessionController";
+import { validateRequest } from "../utils/ErrorHandler";
 
-router.post("/", createSession);
+router.post("/", loginValidator, validateRequest, createSession);
 
 module.exports = router;
