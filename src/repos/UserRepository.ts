@@ -60,4 +60,14 @@ export class UserRepository {
 
         return UserMapper.toDomain(userObj);
     }
+
+    async findUserByEmail(email: string): Promise<User> {
+        const userObj = await this.models.User.findOne({
+            where: {
+                email: email
+            }
+        });
+
+        return UserMapper.toDomain(userObj);
+    }
 }

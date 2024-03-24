@@ -6,8 +6,18 @@ import { PhoneOperatorMapper } from "../mappers/PhoneOperatorMapper";
 import db from "../sequelize/models";
 
 import { handleError } from "../utils/ErrorHandler";
-import { UserRole } from "../enums/UserRole";
-import { PhoneOperator } from "../models/PhoneOperator";
+
+const { param, body } = require('express-validator');
+export const idValidator = [
+    param('id').exists().isInt().withMessage("Invalid user id")
+]
+export const userValidator = [
+    body('name').exists().withMessage("Name field required"),
+    body('surname').exists().withMessage("Surname field required"),
+    body('email').exists().isEmail().withMessage("Email field missing or invalid"),
+    body('password').exists().withMessage("Password field required")
+]
+
 
 export async function getAllUsers(req: Request, res: Response) {
     const userRepository = new UserRepository(db);
@@ -20,27 +30,13 @@ export async function getUserById(req: Request, res: Response) {
     const userRepository = new UserRepository(db);
     const idInt = parseInt(id);
 
-    if (isNaN(idInt)) {
-        res.status(400).json({ message: "Invalid user id" });
-        return;
-    }
-
     try {
         const user = await userRepository.findUserById(idInt);
         if (!user) {
             res.status(404).json({ message: "User not found" });
             return;
         }
-        else {
-            switch (user.role) {
-                case UserRole.PHONE_OPERATOR:
-                    res.status(200).json(PhoneOperatorMapper.toDTO(<PhoneOperator>user));
-                    break;
-                default:
-                    res.status(200).json(UserMapper.toDTO(user));
-                    break;
-            }
-        }
+        res.status(200).json(UserMapper.toDTO(user));
     }
     catch (error) {
         handleError(res, error);
@@ -51,11 +47,6 @@ export async function deleteUser(req: Request, res: Response) {
     const { id } = req.params;
     const userRepository = new UserRepository(db);
     const idInt = parseInt(id);
-
-    if (isNaN(idInt)) {
-        res.status(400).json({ message: "Invalid user id" });
-        return;
-    }
 
     try {
         const user = await userRepository.findUserById(idInt);

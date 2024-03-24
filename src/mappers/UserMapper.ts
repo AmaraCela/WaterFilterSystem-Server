@@ -2,16 +2,26 @@ import { User } from '../models/User';
 import { UserDTO } from '../dtos/UserDTO';
 import { UserRole } from '../enums/UserRole';
 import { PhoneOperator } from '../models/PhoneOperator';
+import { PhoneOperatorMapper } from './PhoneOperatorMapper';
 
 export class UserMapper {
     public static toDTO(user: User): UserDTO {
-        return {
-            id: user.id,
-            name: user.name,
-            surname: user.surname,
-            email: user.email,
-            role: UserRole[user.role]
-        };
+        switch (user.role) {
+            case UserRole.PHONE_OPERATOR:
+                const phoneOperatorDTO = PhoneOperatorMapper.toDTO(<PhoneOperator>user);
+                return {
+                    ...phoneOperatorDTO,
+                    role: UserRole[user.role]
+                };
+            default:
+                return {
+                    id: user.id,
+                    name: user.name,
+                    surname: user.surname,
+                    email: user.email,
+                    role: UserRole[user.role]
+                };
+        }
     }
 
     public static toPersistence(user: User): any {

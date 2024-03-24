@@ -3,6 +3,7 @@ require('dotenv').config({path:__dirname+'/../.env'})
 const express = require('express');
 const app = express();
 const db = require("./sequelize/models");
+// const expressValidator = require('express-validator')
 
 // import { addOperator } from "./controller/signupController/addOperator";
 // import { addSchedule } from "./controller/agentController/addSchedule";
@@ -13,6 +14,9 @@ app.use(express.urlencoded());
 
 const userRouter = require('./routes/users');
 app.use('/api/users', userRouter);
+
+const sessionRouter = require('./routes/session');
+app.use('/api/session', sessionRouter);
 
 // app.post('/addOperator', addOperator);
 // app.post('/addSchedule', addSchedule);

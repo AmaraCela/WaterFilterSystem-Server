@@ -10,7 +10,6 @@ export class PhoneOperatorMapper {
             name: phoneOperator.name,
             surname: phoneOperator.surname,
             email: phoneOperator.email,
-            role: UserRole[phoneOperator.role],
             calls: phoneOperator.calls.map(call => call.id)
         };
     }
@@ -23,5 +22,16 @@ export class PhoneOperatorMapper {
             email: phoneOperator.email,
             passwordHash: phoneOperator.passwordHash
         };
+    }
+
+    public static toDomain(user: any): PhoneOperator {
+        if (!user) {
+            return user;
+        }
+
+        const operator = new PhoneOperator(user.name, user.surname, user.email, user.passwordHash);
+        operator.id = user.user_id;
+
+        return operator;
     }
 }

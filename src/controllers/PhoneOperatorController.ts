@@ -14,7 +14,7 @@ import { PhoneOperatorMapper } from "../mappers/PhoneOperatorMapper";
 export async function getAllPhoneOperators(req: Request, res: Response) {
     const phoneOperatorRepository = new PhoneOperatorRepository(db);
     const phoneOperators = await phoneOperatorRepository.getAll();
-    res.json(phoneOperators.map(UserMapper.toDTO));
+    res.json(phoneOperators.map(PhoneOperatorMapper.toDTO));
 }
 
 export async function addPhoneOperator(req: Request, res: Response) {
@@ -23,7 +23,7 @@ export async function addPhoneOperator(req: Request, res: Response) {
     const phoneOperatorRepository = new PhoneOperatorRepository(db);
 
     try {
-        const user = new PhoneOperator(name, surname, email, password);
+        const user = new PhoneOperator(name, surname, email, await bcrypt.hash(password, 10));
 
         const userSaved = await userRepository.save(user);
         user.id = userSaved.id;
@@ -43,11 +43,6 @@ export async function updatePhoneOperator(req: Request, res: Response) {
     const phoneOperatorRepository = new PhoneOperatorRepository(db);
 
     const idInt = parseInt(id);
-    if (isNaN(idInt)) {
-        res.status(400).json({ message: "Invalid user id" });
-        return;
-    }
-
     try {
         const user = <PhoneOperator> await userRepository.findUserById(idInt);
         if (!user || user.role !== UserRole.PHONE_OPERATOR) {

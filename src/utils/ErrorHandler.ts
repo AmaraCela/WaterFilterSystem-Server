@@ -15,7 +15,7 @@ export function handleError(res: Response, error: any) {
                 }
             });
 
-            message = "Validation error occurred";
+            message = "Invalid input";
         }
     }
 
@@ -25,4 +25,25 @@ export function handleError(res: Response, error: any) {
     else {
         res.status(400).json({ message: message });
     }  
+}
+
+export function validateRequest(req: Request, res: Response, next: any) {
+    const { validationResult } = require('express-validator');
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        let errors: any = {};
+
+        const errorArray = error.array();
+        if (errorArray instanceof Array) {
+            errorArray.map(err => {
+                if (err.path != null) {
+                    errors[err.path] = err.msg;
+                }
+            });
+        }
+
+        res.status(400).json({ message: "Invalid input", errors });
+        return;
+    }
+    next();
 }

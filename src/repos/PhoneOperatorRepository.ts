@@ -11,7 +11,17 @@ export class PhoneOperatorRepository {
     }
 
     async getAll(): Promise<PhoneOperator[]> {
-        return await this.models.PhoneOperator.findAll();
+        const users = await this.models.User.findAll({
+            where: {
+                role: UserRole[UserRole.PHONE_OPERATOR]
+            }
+        });
+
+        const operatorModels = users.map(PhoneOperatorMapper.toDomain);
+        const operators = await this.models.PhoneOperator.findAll();
+        // TODO operator specific fields
+        // ...
+        return operatorModels;
     }
     
     async exists(operator: PhoneOperator): Promise<boolean> {
@@ -24,6 +34,17 @@ export class PhoneOperatorRepository {
 
         return !!userExists;
     }
+
+    async delete(user: PhoneOperator): Promise<any> {
+        const userFound = await this.models.PhoneOperator.findOne({
+            where: {
+                user_id: user.id
+            }
+        });
+
+        return await userFound.destroy();
+    }
+
 
     async save(operator: PhoneOperator): Promise<any> {
         const userObj = await this.models.PhoneOperator.findOne({
