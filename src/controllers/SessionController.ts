@@ -10,8 +10,11 @@ const jwt = require('jsonwebtoken');
 const { param, body } = require('express-validator');
 
 export const loginValidator = [
-    body('email').exists().isEmail().withMessage("Email field missing or invalid"),
-    body('password').exists().withMessage("Password field required")
+    body('email').notEmpty().withMessage("Email field required").bail()
+        .isEmail().withMessage("Invalid email"),
+
+    body('password').notEmpty().withMessage("Password field required").bail()
+        .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long")
 ]
 
 export async function createSession(req: Request, res: Response) {
@@ -33,7 +36,7 @@ export async function createSession(req: Request, res: Response) {
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 
-        res.json({ token });
+        res.json({ token, user_id: user.id, name: user.name, surname: user.surname });
     }
     catch (error) {
         handleException(res, error);

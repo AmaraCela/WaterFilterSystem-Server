@@ -12,6 +12,11 @@ const db = require("./sequelize/models");
 app.use(express.json());
 app.use(express.urlencoded());
 
+if (process.env.NODE_ENV === 'development') {
+    const cors = require('cors');
+    app.use(cors());
+}
+
 const userRouter = require('./routes/users');
 app.use('/api/users', userRouter);
 
