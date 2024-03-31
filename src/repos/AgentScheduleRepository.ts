@@ -8,6 +8,22 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
         this.models = models;
     }
 
+    async getAll(): Promise<AgentSchedule[]> {
+        const schedules = await this.models.AgentSchedule.findAll(
+            {
+                include: [{
+                    model: this.models.SalesAgent,
+                    include: [{
+                        model: this.models.User,
+                        attributes: ['name', 'surname']
+                    }]
+                }]
+            }
+        );
+        console.log(schedules);
+        return schedules;
+    }
+
     async exists(schedule: AgentSchedule): Promise<boolean> {
         const scheduleExists = await this.models.AgentSchedule.findOne({
             where: {

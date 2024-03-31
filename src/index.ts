@@ -1,13 +1,7 @@
-require('dotenv').config({path:__dirname+'/../.env'})
-
+require('dotenv').config({path:__dirname+'/.env'})
 const express = require('express');
 const app = express();
 const db = require("./sequelize/models");
-// const expressValidator = require('express-validator')
-
-// import { addOperator } from "./controller/signupController/addOperator";
-// import { addSchedule } from "./controller/agentController/addSchedule";
-// import { loginUser } from "./controller/loginController";
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -23,9 +17,11 @@ app.use('/api/users', userRouter);
 const sessionRouter = require('./routes/session');
 app.use('/api/session', sessionRouter);
 
-// app.post('/addOperator', addOperator);
-// app.post('/addSchedule', addSchedule);
-// app.post('/login', loginUser);
+const scheduleRouter = require("./routes/schedules");
+app.use('/api/schedules', scheduleRouter);
+
+const clientRouter = require("./routes/clients");
+app.use('/api/clients', clientRouter);
 
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
