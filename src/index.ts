@@ -23,6 +23,9 @@ app.use('/api/schedules', scheduleRouter);
 const clientRouter = require("./routes/clients");
 app.use('/api/clients', clientRouter);
 
+const callRouter = require("./routes/calls");
+app.use('/api/calls', callRouter);
+
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
 }).then(() => {

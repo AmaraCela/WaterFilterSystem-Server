@@ -10,7 +10,7 @@ export class PhoneOperatorMapper {
             name: phoneOperator.name,
             surname: phoneOperator.surname,
             email: phoneOperator.email,
-            calls: phoneOperator.calls.map(call => call.id)
+            calls: phoneOperator.calls.map(call => call.call_id)
         };
     }
 
