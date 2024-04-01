@@ -40,7 +40,7 @@ export async function getCallById(req: Request, res: Response) {
             res.status(404).json({ message: "Call not found" });
             return;
         }
-        res.status(200).json(CallMapper.toDTO(call));
+        res.json(CallMapper.toDTO(call));
     }
     catch (error) {
         handleException(res, error);
@@ -91,7 +91,7 @@ export async function updateCall(req: Request, res: Response) {
         call.id = idInt;
 
         await callRepository.save(call);
-        res.status(200).json(CallMapper.toDTO(call));
+        res.json(CallMapper.toDTO(call));
     }
     catch (error) {
         handleException(res, error);

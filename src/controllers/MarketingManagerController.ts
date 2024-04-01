@@ -56,7 +56,7 @@ export async function updateMarketingManager(req: Request, res: Response) {
 
             await userRepository.save(user);
             await marketingManagerRepository.save(user);
-            res.status(200).json(MarketingManagerMapper.toDTO(user));
+            res.json(MarketingManagerMapper.toDTO(user));
         }
     }
     catch (error) {

@@ -1,3 +1,4 @@
+import { ScheduleMapper } from "../mappers/ScheduleMapper";
 import { AgentSchedule } from "../models/AgentSchedule";
 import { Repository } from "./Repository";
 
@@ -9,21 +10,30 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     }
 
     async getAll(): Promise<AgentSchedule[]> {
-        const schedules = await this.models.AgentSchedule.findAll(
-            {
-                include: [{
-                    model: this.models.SalesAgent,
-                    include: [{
-                        model: this.models.User,
-                        attributes: ['name', 'surname']
-                    }]
-                }]
-            }
-        );
-        console.log(schedules);
-        return schedules;
+        const schedules = await this.models.AgentSchedule.findAll();
+        return schedules.map(ScheduleMapper.toDomain);
     }
 
+    async getByAgentId(agentId: number): Promise<AgentSchedule[]> {
+        const schedules = await this.models.AgentSchedule.findAll({
+            where: {
+                salesAgent: agentId
+            }
+        });
+
+        return schedules.map(ScheduleMapper.toDomain);
+    }
+
+    async getByScheduleId(scheduleId: number): Promise<AgentSchedule> {
+        const schedule = await this.models.AgentSchedule.findOne({
+            where: {
+                schedule_id: scheduleId
+            }
+        });
+
+        return ScheduleMapper.toDomain(schedule);
+    }
+    
     async exists(schedule: AgentSchedule): Promise<boolean> {
         const scheduleExists = await this.models.AgentSchedule.findOne({
             where: {
@@ -43,18 +53,19 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     }
 
     async save(schedule: AgentSchedule): Promise<any> {
-        const scheduleObj = await this.models.AgentSchedule.findOne({
+        let scheduleObj = await this.models.AgentSchedule.findOne({
             where: {
                 schedule_id: schedule.id
             }
         });
         
-        if(scheduleObj != null) {
-            return scheduleObj.update(schedule);
+        if (scheduleObj != null) {
+            scheduleObj = await scheduleObj.update(schedule);
         }
         else {
-            return await this.models.AgentSchedule.create(schedule);
+            scheduleObj = await this.models.AgentSchedule.create(schedule);
         }
-    }
 
+        return ScheduleMapper.toDomain(scheduleObj);
+    }
 }

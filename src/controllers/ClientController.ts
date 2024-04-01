@@ -71,7 +71,7 @@ export async function getClientById(req: Request, res: Response) {
             res.status(404).json({ message: "Client not found" });
             return;
         }
-        res.status(200).json(ClientMapper.toDTO(client));
+        res.json(ClientMapper.toDTO(client));
     }
     catch (error) {
         handleException(res, error);
@@ -109,7 +109,7 @@ export async function updateClient(req: Request, res: Response) {
         client.id = idInt;
 
         clientRepository.save(client);
-        res.status(200).json(ClientMapper.toDTO(client));
+        res.json(ClientMapper.toDTO(client));
     }
     catch (error) {
         handleException(res, error);

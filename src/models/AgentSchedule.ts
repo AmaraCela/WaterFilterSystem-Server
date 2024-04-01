@@ -1,13 +1,13 @@
 export class AgentSchedule {
     id: number;
-    dayOfTheWeek: string;
-    startTime: Date;
-    endTime: Date;
+    day: Date;
+    startTime: string;
+    endTime: string;
     salesAgent: number;
 
-    constructor (dayOfTheWeek: string, startTime: Date, endTime: Date, salesAgent: number) {
+    constructor (day: Date, startTime: string, endTime: string, salesAgent: number) {
         this.id = -1;
-        this.dayOfTheWeek = dayOfTheWeek;
+        this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
         this.salesAgent = salesAgent;

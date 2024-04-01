@@ -37,7 +37,7 @@ export async function getUserById(req: Request, res: Response) {
             res.status(404).json({ message: "User not found" });
             return;
         }
-        res.status(200).json(UserMapper.toDTO(user, true));
+        res.json(UserMapper.toDTO(user, true));
     }
     catch (error) {
         handleException(res, error);

@@ -18,9 +18,6 @@ app.use('/api/users', userRouter);
 const sessionRouter = require('./routes/session');
 app.use('/api/session', sessionRouter);
 
-const scheduleRouter = require("./routes/schedules");
-app.use('/api/schedules', scheduleRouter);
-
 const clientRouter = require("./routes/clients");
 app.use('/api/clients', clientRouter);
 

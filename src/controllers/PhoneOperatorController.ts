@@ -56,7 +56,7 @@ export async function updatePhoneOperator(req: Request, res: Response) {
 
             await userRepository.save(user);
             await phoneOperatorRepository.save(user);
-            res.status(200).json(PhoneOperatorMapper.toDTO(user));
+            res.json(PhoneOperatorMapper.toDTO(user));
         }
     }
     catch (error) {
