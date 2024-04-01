@@ -1,7 +1,5 @@
 import { PhoneOperatorDTO } from '../dtos/PhoneOperatorDTO';
-import { UserRole } from '../enums/UserRole';
 import { PhoneOperator } from '../models/PhoneOperator';
-import { User } from '../models/User';
 
 export class PhoneOperatorMapper {
     public static toDTO(phoneOperator: PhoneOperator): PhoneOperatorDTO {

@@ -23,7 +23,7 @@ export const userValidator = [
 export async function getAllUsers(req: Request, res: Response) {
     const userRepository = new UserRepository(db);
     const users = await userRepository.getAll();
-    res.json(users.map(UserMapper.toDTO));
+    res.json(users.map(user => UserMapper.toDTO(user)));
 }
 
 export async function getUserById(req: Request, res: Response) {
@@ -37,7 +37,7 @@ export async function getUserById(req: Request, res: Response) {
             res.status(404).json({ message: "User not found" });
             return;
         }
-        res.status(200).json(UserMapper.toDTO(user));
+        res.status(200).json(UserMapper.toDTO(user, true));
     }
     catch (error) {
         handleException(res, error);
