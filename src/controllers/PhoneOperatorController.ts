@@ -3,11 +3,8 @@ import { UserRepository } from "../repos/UserRepository";
 import { PhoneOperatorRepository } from "../repos/PhoneOperatorRepository";
 import { PhoneOperator } from "../models/PhoneOperator";
 import { UserRole } from "../enums/UserRole";
-import { UserMapper } from "../mappers/UserMapper";
 import { handleException } from "./utils/ErrorHandler";
 import db from "../sequelize/models";
-
-import bcrypt from "bcryptjs";
 
 import { PhoneOperatorMapper } from "../mappers/PhoneOperatorMapper";
 
@@ -23,7 +20,8 @@ export async function addPhoneOperator(req: Request, res: Response) {
     const phoneOperatorRepository = new PhoneOperatorRepository(db);
 
     try {
-        const user = new PhoneOperator(name, surname, email, await bcrypt.hash(password, 10));
+        const user = new PhoneOperator(name, surname, email, password);
+        user.hashPassword();
 
         const userSaved = await userRepository.save(user);
         user.id = userSaved.id;
@@ -52,7 +50,8 @@ export async function updatePhoneOperator(req: Request, res: Response) {
             user.name = name;
             user.surname = surname;
             user.email = email;
-            user.passwordHash = await bcrypt.hash(password, 10);
+            user.passwordHash = password;
+            user.hashPassword();
 
             await userRepository.save(user);
             await phoneOperatorRepository.save(user);

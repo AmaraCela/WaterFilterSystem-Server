@@ -1,6 +1,5 @@
 import { User } from "../models/User";
 import { UserMapper } from '../mappers/UserMapper';
-import bcrypt from "bcryptjs";
 
 export class UserRepository {
     private models: any;

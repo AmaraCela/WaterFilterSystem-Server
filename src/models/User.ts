@@ -1,4 +1,5 @@
 import { UserRole } from '../enums/UserRole';
+import bcrypt from "bcryptjs";
 
 export abstract class User {
     id: number;
@@ -15,5 +16,9 @@ export abstract class User {
         this.email = email;
         this.passwordHash = passwordHash;
         this.role = role;
+    }
+
+    async hashPassword() {
+        this.passwordHash = await bcrypt.hash(this.passwordHash, 10)
     }
 }
