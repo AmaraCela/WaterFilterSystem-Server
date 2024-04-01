@@ -15,7 +15,8 @@ export const idValidator = [
 export const userValidator = [
     body('name').exists().withMessage("Name field required"),
     body('surname').exists().withMessage("Surname field required"),
-    body('email').exists().isEmail().withMessage("Email field missing or invalid"),
+    body('email').exists().withMessage("Email field required").bail()
+        .isEmail().withMessage("Invalid email address"),
     body('password').exists().withMessage("Password field required")
 ]
 

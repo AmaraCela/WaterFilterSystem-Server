@@ -1,7 +1,7 @@
 export interface AgentScheduleDTO {
     id: number;
     dayOfTheWeek: string;
-    startTime: Date;
-    endTime: Date;
+    startTime: string;
+    endTime: string;
     agentId: number;
 }

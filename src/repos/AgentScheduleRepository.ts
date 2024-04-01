@@ -27,7 +27,7 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     async exists(schedule: AgentSchedule): Promise<boolean> {
         const scheduleExists = await this.models.AgentSchedule.findOne({
             where: {
-                schedule_id: schedule.schedule_id
+                schedule_id: schedule.id
             }
         });
 
@@ -37,7 +37,7 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     async delete(schedule: AgentSchedule): Promise<any> {
         return await this.models.AgentSchedule.destroy({
             where: {
-                schedule_id: schedule.schedule_id
+                schedule_id: schedule.id
             }
         })
     }
@@ -45,7 +45,7 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     async save(schedule: AgentSchedule): Promise<any> {
         const scheduleObj = await this.models.AgentSchedule.findOne({
             where: {
-                schedule_id: schedule.schedule_id
+                schedule_id: schedule.id
             }
         });
         

@@ -4,10 +4,10 @@ import { AgentScheduleDTO } from "../dtos/AgentScheduleDTO";
 export class ScheduleMapper{
     public static toDTO(schedule: AgentSchedule): AgentScheduleDTO {
         return {
-            id: schedule.schedule_id,
+            id: schedule.id,
             dayOfTheWeek: schedule.dayOfTheWeek,
-            startTime: schedule.startTime,
-            endTime: schedule.endTime,
+            startTime: schedule.startTime.toISOString(),
+            endTime: schedule.endTime.toISOString(),
             agentId: schedule.salesAgent,
         };
     }
