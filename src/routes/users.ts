@@ -2,34 +2,36 @@ const express = require('express');
 const router = express.Router();
 
 import { getAllUsers, getUserById, deleteUser, idValidator, userValidator } from "../controllers/UserController";
-import { getAllPhoneOperators, addPhoneOperator, updatePhoneOperator } from "../controllers/PhoneOperatorController";
-import { getAllMarketingManagers, addMarketingManager, updateMarketingManager } from "../controllers/MarketingManagerController";
-
-import { addScheduleToAgent, deleteSchedule, getAllSchedules, getSchedulesOfAgent, updateSchedule } from "../controllers/ScheduleController";
+import { getAllPhoneOperators, addPhoneOperator, updatePhoneOperator, getPhoneOperatorById } from "../controllers/PhoneOperatorController";
+import { getAllMarketingManagers, addMarketingManager, updateMarketingManager, getMarketingManagerById } from "../controllers/MarketingManagerController";
+import { getAllSalesAgents, addSalesAgent, updateSalesAgent, getSalesAgentById } from "../controllers/SalesAgentController";
+import { addScheduleToAgent, deleteSchedule, getAllSchedules, getSchedulesOfAgent, updateSchedule, scheduleIdValidator } from "../controllers/ScheduleController";
 
 import { handleInputValidationErrors } from "../controllers/utils/ErrorHandler";
 
 router.get("/phoneoperators", getAllPhoneOperators);
 router.post("/phoneoperators", userValidator, handleInputValidationErrors, addPhoneOperator);
+router.get("/phoneoperators/:id", idValidator, handleInputValidationErrors, getPhoneOperatorById);
 router.put("/phoneoperators/:id", idValidator, userValidator, handleInputValidationErrors, updatePhoneOperator);
 
 router.get("/marketingmanagers", getAllMarketingManagers);
 router.post("/marketingmanagers", userValidator, handleInputValidationErrors, addMarketingManager);
+router.get("/marketingmanagers/:id", idValidator, handleInputValidationErrors, getMarketingManagerById);
 router.put("/marketingmanagers/:id", idValidator, userValidator, handleInputValidationErrors, updateMarketingManager);
 
-// router.get("/salesagents", getAllSalesAgents);
-// router.post("/salesagents", userValidator, handleInputValidationErrors, addSalesAgent);
-// router.put("/salesagents/:id", idValidator, userValidator, handleInputValidationErrors, updateSalesAgent);
+router.get("/salesagents/:id/schedules", idValidator, handleInputValidationErrors, getSchedulesOfAgent);
+router.post("/salesagents/:id/schedules", idValidator, handleInputValidationErrors, addScheduleToAgent);
+router.put("/salesagents/:id/schedules/:scheduleId", idValidator, scheduleIdValidator, handleInputValidationErrors, updateSchedule);
+router.delete("/salesagents/:id/schedules/:scheduleId", idValidator, scheduleIdValidator, handleInputValidationErrors, deleteSchedule);
+
+router.get("/salesagents", getAllSalesAgents);
+router.post("/salesagents", userValidator, handleInputValidationErrors, addSalesAgent);
+router.get("/salesagents/:id", idValidator, handleInputValidationErrors, getSalesAgentById);
+router.put("/salesagents/:id", idValidator, userValidator, handleInputValidationErrors, updateSalesAgent);
 
 router.get("/", getAllUsers);
 router.get("/:id", idValidator, handleInputValidationErrors, getUserById);
 router.delete("/:id", idValidator, handleInputValidationErrors, deleteUser);
-
-router.get("/schedules", getAllSchedules);
-router.get("/:id/schedules", idValidator, handleInputValidationErrors, getSchedulesOfAgent);
-router.post("/:id/schedules", idValidator, handleInputValidationErrors, addScheduleToAgent);
-router.put("/schedules/:id", idValidator, handleInputValidationErrors, updateSchedule);
-router.delete("/schedules/:id", idValidator, handleInputValidationErrors, deleteSchedule);
 
 // router.get("/chiefs", getAllChiefs);
 // router.post("/chiefs", addChief);

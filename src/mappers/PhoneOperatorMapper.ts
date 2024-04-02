@@ -9,7 +9,7 @@ export class PhoneOperatorMapper {
             surname: phoneOperator.surname,
             email: phoneOperator.email,
             calls: phoneOperator.calls,
-            callHistory: [] // TODO
+            callHistory: phoneOperator.callHistory
         };
     }
 
@@ -28,8 +28,10 @@ export class PhoneOperatorMapper {
             return user;
         }
 
-        const operator = new PhoneOperator(user.name, user.surname, user.email, user.passwordHash);
-        operator.id = user.user_id;
+        const operator = new PhoneOperator(user.User.name, user.User.surname, user.User.email, user.User.passwordHash);
+        operator.id = user.operator_id;
+        operator.calls = user.Calls.map((call: any) => call.call_id).filter((call: any) => !call.completed);
+        operator.callHistory = user.Calls.map((call: any) => call.call_id).filter((call: any) => call.completed);
 
         return operator;
     }

@@ -5,16 +5,21 @@ module.exports = function(sequelize, DataTypes) {
             primaryKey: true,
             autoIncrement: true
         },
-        dayOfTheWeek: {
-            type: DataTypes.STRING,
+        salesAgent: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true
+        },
+        day: {
+            type: DataTypes.DATE,
             allowNull: false
         },
         startTime: {
-            type: DataTypes.TIME,
+            type: DataTypes.STRING,
             allowNull: false
         },
         endTime: {
-            type: DataTypes.TIME,
+            type: DataTypes.STRING,
             allowNull: false
         }
     });

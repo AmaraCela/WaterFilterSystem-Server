@@ -10,17 +10,29 @@ export class PhoneOperatorRepository {
     }
 
     async getAll(): Promise<PhoneOperator[]> {
-        const users = await this.models.User.findAll({
-            where: {
-                role: UserRole[UserRole.PHONE_OPERATOR]
-            }
+        const users = await this.models.PhoneOperator.findAll({
+            include: [
+                this.models.User, 
+                this.models.Call
+            ]
         });
 
         const operatorModels = users.map(PhoneOperatorMapper.toDomain);
-        const operators = await this.models.PhoneOperator.findAll();
-        // TODO operator specific fields
-        // ...
         return operatorModels;
+    }
+
+    async findOperatorById(id: number): Promise<PhoneOperator> {
+        const user = await this.models.PhoneOperator.findOne({
+            where: {
+                operator_id: id
+            },
+            include: [
+                this.models.User, 
+                this.models.Call
+            ]
+        });
+
+        return PhoneOperatorMapper.toDomain(user);
     }
     
     async exists(operator: PhoneOperator): Promise<boolean> {

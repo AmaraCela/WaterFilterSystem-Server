@@ -10,16 +10,29 @@ export class MarketingManagerRepository {
     }
 
     async getAll(): Promise<MarketingManager[]> {
-        const users = await this.models.User.findAll({
-            where: {
-                role: UserRole[UserRole.MARKETING_MANAGER]
-            }
+        const users = await this.models.MarketingManager.findAll({
+            include: [
+                this.models.User
+            ]
         });
 
         const managerModels = users.map(MarketingManagerMapper.toDomain);
         return managerModels;
     }
     
+    async findManagerById(id: number): Promise<MarketingManager> {
+        const user = await this.models.MarketingManager.findOne({
+            where: {
+                manager_id: id
+            },
+            include: [
+                this.models.User
+            ]
+        });
+
+        return MarketingManagerMapper.toDomain(user);
+    }
+
     async exists(manager: MarketingManager): Promise<boolean> {
         const userExists = await this.models.User.findOne({
             where: {
