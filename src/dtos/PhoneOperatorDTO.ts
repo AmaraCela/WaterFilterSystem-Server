@@ -4,5 +4,5 @@ export interface PhoneOperatorDTO {
     surname: string,
     email: string,
     calls: Array<number>,
-    // callHistory: Array<number>
+    callHistory: Array<number>
 }

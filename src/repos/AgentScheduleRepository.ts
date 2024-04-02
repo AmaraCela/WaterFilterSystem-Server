@@ -1,3 +1,4 @@
+import { ScheduleMapper } from "../mappers/ScheduleMapper";
 import { AgentSchedule } from "../models/AgentSchedule";
 import { Repository } from "./Repository";
 
@@ -8,26 +9,57 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
         this.models = models;
     }
 
-    async getAll(): Promise<AgentSchedule[]> {
-        const schedules = await this.models.AgentSchedule.findAll(
-            {
-                include: [{
-                    model: this.models.SalesAgent,
-                    include: [{
-                        model: this.models.User,
-                        attributes: ['name', 'surname']
-                    }]
-                }]
+    private async deleteOldSchedules() {
+        const lastMonday = new Date();
+        lastMonday.setDate(lastMonday.getDate() - ((lastMonday.getDay() + 6) % 7));
+        lastMonday.setHours(0, 0, 0, 0);
+
+        await this.models.AgentSchedule.destroy({
+            where: {
+                day: {
+                    [this.models.Sequelize.Op.lt]: lastMonday
+                }
             }
-        );
-        console.log(schedules);
-        return schedules;
+        });
+    }
+
+    async getAll(): Promise<AgentSchedule[]> {
+        this.deleteOldSchedules();
+
+        const schedules = await this.models.AgentSchedule.findAll();
+        return schedules.map(ScheduleMapper.toDomain);
+    }
+
+    async getByAgentId(agentId: number): Promise<AgentSchedule[]> {
+        this.deleteOldSchedules();
+
+        const schedules = await this.models.AgentSchedule.findAll({
+            where: {
+                salesAgent: agentId
+            }
+        });
+
+        return schedules.map(ScheduleMapper.toDomain);
+    }
+
+    async getByScheduleId(scheduleId: number): Promise<AgentSchedule> {
+        this.deleteOldSchedules();
+
+        const schedule = await this.models.AgentSchedule.findOne({
+            where: {
+                schedule_id: scheduleId
+            }
+        });
+
+        return ScheduleMapper.toDomain(schedule);
     }
 
     async exists(schedule: AgentSchedule): Promise<boolean> {
+        this.deleteOldSchedules();
+
         const scheduleExists = await this.models.AgentSchedule.findOne({
             where: {
-                schedule_id: schedule.schedule_id
+                schedule_id: schedule.id
             }
         });
 
@@ -37,24 +69,25 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     async delete(schedule: AgentSchedule): Promise<any> {
         return await this.models.AgentSchedule.destroy({
             where: {
-                schedule_id: schedule.schedule_id
+                schedule_id: schedule.id
             }
         })
     }
 
     async save(schedule: AgentSchedule): Promise<any> {
-        const scheduleObj = await this.models.AgentSchedule.findOne({
+        let scheduleObj = await this.models.AgentSchedule.findOne({
             where: {
-                schedule_id: schedule.schedule_id
+                schedule_id: schedule.id
             }
         });
         
-        if(scheduleObj != null) {
-            return scheduleObj.update(schedule);
+        if (scheduleObj != null) {
+            scheduleObj = await scheduleObj.update(schedule);
         }
         else {
-            return await this.models.AgentSchedule.create(schedule);
+            scheduleObj = await this.models.AgentSchedule.create(schedule);
         }
-    }
 
+        return ScheduleMapper.toDomain(scheduleObj);
+    }
 }

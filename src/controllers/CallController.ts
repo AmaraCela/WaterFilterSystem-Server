@@ -1,27 +1,119 @@
 import { Request, Response } from "express";
 import { CallRepository } from "../repos/CallRepository";
-import db from "../sequelize/models";
+import { ClientRepository } from "../repos/ClientRepository";
 import { Call } from "../models/Call";
 
-export async function addCall(req: Request, res: Response) {
+import db from "../sequelize/models";
+
+import { handleException } from "./utils/ErrorHandler";
+import { CallMapper } from "../mappers/CallMapper";
+import { UserRepository } from "../repos/UserRepository";
+
+const { param, body } = require('express-validator');
+export const idValidator = [
+    param('id').exists().isInt().withMessage("Invalid call id")
+]
+
+export const callValidator = [
+    body('clientId').exists().withMessage("clientId field required").bail()
+        .isInt().withMessage("clientId field must be an integer"),
+    body('phoneOperatorId').exists().withMessage("phoneOperatorId field required").bail()
+        .isInt().withMessage("phoneOperatorId field must be an integer"),
+    body('scheduledTime').exists().withMessage("scheduledTime field required").bail().
+        isISO8601().toDate().withMessage("scheduledTime must be a valid date in ISO8601 format"),
+]
+
+export async function getAllCalls(req: Request, res: Response) {
     const callRepository = new CallRepository(db);
-    const { client, phoneOperator, scheduledTime, outcomeComment } = req.body;
-    const call = new Call(client, phoneOperator, scheduledTime, outcomeComment);
+    const calls = await callRepository.getAll();
+    res.json(calls.map(call => CallMapper.toDTO(call)));
+}
+
+export async function getCallById(req: Request, res: Response) {
+    const { id } = req.params;
+    const callRepository = new CallRepository(db);
+    const idInt = parseInt(id);
+
     try {
-        callRepository.save(call);
+        const call = await callRepository.findCallById(idInt);
+        if (!call) {
+            res.status(404).json({ message: "Call not found" });
+            return;
+        }
+        res.json(CallMapper.toDTO(call));
     }
     catch (error) {
-
+        handleException(res, error);
     }
 }
 
-export async function getCalls(req: Request, res: Response) {
+export async function addCall(req: Request, res: Response) {
+    const { clientId, phoneOperatorId, scheduledTime } = req.body;
     const callRepository = new CallRepository(db);
+    const clientRepository = new ClientRepository(db);
+    const userRepository = new UserRepository(db);
+
     try {
-        const calls = await callRepository.getAll();
-        res.status(200).json(calls);
+        const client = await clientRepository.findClientById(clientId);
+        if (!client) {
+            res.status(400).json({ message: "Client not found" });
+            return;
+        }
+
+        const phoneOperator = await userRepository.findUserById(phoneOperatorId);
+        if (!phoneOperator) {
+            res.status(400).json({ message: "Phone operator not found" });
+            return;
+        }
+
+        let call = new Call(client.id, phoneOperator.id, new Date(scheduledTime));
+        call = await callRepository.save(call);
+        res.status(201).json(CallMapper.toDTO(call));
+    } catch (error) {
+        handleException(res, error);
+    }
+}
+
+export async function updateCall(req: Request, res: Response) {
+    const { clientId, phoneOperatorId, scheduledTime, outcomeComment, completed } = req.body;
+    const { id } = req.params;
+    const callRepository = new CallRepository(db);
+
+    const idInt = parseInt(id);
+    try {
+        let call = await callRepository.findCallById(idInt);
+        if (!call) {
+            res.status(404).json({ message: "Call not found" });
+            return;
+        }
+        
+        call = new Call(clientId, phoneOperatorId, new Date(scheduledTime), outcomeComment, completed);
+        call.id = idInt;
+
+        await callRepository.save(call);
+        res.json(CallMapper.toDTO(call));
     }
     catch (error) {
+        handleException(res, error);
+    }
+}
 
+export async function deleteCall(req: Request, res: Response) {
+    const { id } = req.params;
+    const callRepository = new CallRepository(db);
+    const idInt = parseInt(id);
+
+    try {
+        const call = await callRepository.findCallById(idInt);
+        if (!call) {
+            res.status(404).json({ message: "Call not found" });
+            return;
+        }
+
+        await callRepository.delete(call);
+        res.status(204).send();
+    }
+    catch (error) {
+        handleException(res, error);
     }
 }

@@ -55,15 +55,18 @@ module.exports = function(sequelize, DataTypes) {
         });
 
         Client.hasMany(models.Call, {
-            foreignKey: "client"
+            foreignKey: "client",
+            onDelete: "CASCADE"
         });
 
         Client.hasMany(models.Meeting, {
-            foreignKey: "client"
+            foreignKey: "client",
+            onDelete: "CASCADE"
         });
 
         Client.hasOne(models.Sale, {
-            foreignKey: "client"
+            foreignKey: "client",
+            onDelete: "CASCADE"
         });
     }
 

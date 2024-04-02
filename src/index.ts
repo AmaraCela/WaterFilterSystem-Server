@@ -1,4 +1,5 @@
 require('dotenv').config({path:__dirname+'/.env'})
+
 const express = require('express');
 const app = express();
 const db = require("./sequelize/models");
@@ -17,9 +18,6 @@ app.use('/api/users', userRouter);
 const sessionRouter = require('./routes/session');
 app.use('/api/session', sessionRouter);
 
-const scheduleRouter = require("./routes/schedules");
-app.use('/api/schedules', scheduleRouter);
-
 const clientRouter = require("./routes/clients");
 app.use('/api/clients', clientRouter);
 
@@ -29,7 +27,7 @@ app.use('/api/calls', callRouter);
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
 }).then(() => {
-    // db.sequelize.sync({force: true});
+    // db.sequelize.sync();
 }).catch((err: any) => {
     console.log("Error: " + err);
 })

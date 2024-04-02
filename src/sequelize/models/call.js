@@ -2,7 +2,8 @@ module.exports = function(sequelize, DataTypes) {
     const Call = sequelize.define("Call", {
         call_id: {
             type: DataTypes.INTEGER,
-            primaryKey: true
+            primaryKey: true,
+            autoIncrement: true
         },
         scheduledTime: {
             type: DataTypes.DATE

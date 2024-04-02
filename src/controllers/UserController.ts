@@ -15,14 +15,15 @@ export const idValidator = [
 export const userValidator = [
     body('name').exists().withMessage("Name field required"),
     body('surname').exists().withMessage("Surname field required"),
-    body('email').exists().isEmail().withMessage("Email field missing or invalid"),
+    body('email').exists().withMessage("Email field required").bail()
+        .isEmail().withMessage("Invalid email address"),
     body('password').exists().withMessage("Password field required")
 ]
 
 export async function getAllUsers(req: Request, res: Response) {
     const userRepository = new UserRepository(db);
     const users = await userRepository.getAll();
-    res.json(users.map(UserMapper.toDTO));
+    res.json(users.map(user => UserMapper.toDTO(user)));
 }
 
 export async function getUserById(req: Request, res: Response) {
@@ -36,7 +37,7 @@ export async function getUserById(req: Request, res: Response) {
             res.status(404).json({ message: "User not found" });
             return;
         }
-        res.status(200).json(UserMapper.toDTO(user));
+        res.json(UserMapper.toDTO(user, true));
     }
     catch (error) {
         handleException(res, error);

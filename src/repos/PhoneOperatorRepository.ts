@@ -1,7 +1,6 @@
 import { PhoneOperator } from '../models/PhoneOperator';
 import { PhoneOperatorMapper } from '../mappers/PhoneOperatorMapper';
 import { UserRole } from '../enums/UserRole';
-// import bcrypt from "bcryptjs";
 
 export class PhoneOperatorRepository {
     private models: any;
