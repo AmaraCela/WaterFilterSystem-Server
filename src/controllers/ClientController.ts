@@ -43,10 +43,27 @@ export async function getClientsByStatus(req: Request, res: Response) {
     }
 }
 
+export async function getBuyers(req: Request, res: Response) {
+    const clientRepository = new ClientRepository(db);
+    try {
+        const buyers = await clientRepository.findBuyers();
+        res.status(200).json(buyers);
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+
+}
+
 export async function getAllClients(req: Request, res: Response) {
-    const { status } = req.query;
+    const { status, type } = req.query;
     if (status) {
         getClientsByStatus(req, res);
+        return;
+    }
+    
+    if(type && type === "Buyers") {
+        getBuyers(req, res);
         return;
     }
     

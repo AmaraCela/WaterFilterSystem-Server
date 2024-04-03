@@ -80,4 +80,13 @@ export class ClientRepository implements Repository<Client> {
 
         return ClientMapper.toDomain(clientObj);
     }
+
+    async findBuyers(): Promise<Client[]> {
+        const buyers = await this.models.Client.findAll({
+            where: {
+                hasMadePurchase: 1,
+            }
+        });
+        return buyers.map(ClientMapper.toDomain);
+    }
 }
