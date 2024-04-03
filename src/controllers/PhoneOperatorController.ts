@@ -14,6 +14,24 @@ export async function getAllPhoneOperators(req: Request, res: Response) {
     res.json(phoneOperators.map(PhoneOperatorMapper.toDTO));
 }
 
+export async function getPhoneOperatorById(req: Request, res: Response) {
+    const { id } = req.params;
+    const phoneOperatorRepository = new PhoneOperatorRepository(db);
+    const idInt = parseInt(id);
+
+    try {
+        const phoneOperator = await phoneOperatorRepository.findOperatorById(idInt);
+        if (!phoneOperator) {
+            res.status(404).json({ message: "Phone operator not found" });
+            return;
+        }
+        res.json(PhoneOperatorMapper.toDTO(phoneOperator));
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+}
+
 export async function addPhoneOperator(req: Request, res: Response) {
     const { name, surname, email, password } = req.body;
     const userRepository = new UserRepository(db);

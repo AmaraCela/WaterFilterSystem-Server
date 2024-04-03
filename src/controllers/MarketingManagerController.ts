@@ -15,6 +15,25 @@ export async function getAllMarketingManagers(req: Request, res: Response) {
     res.json(marketingManagers.map(MarketingManagerMapper.toDTO));
 }
 
+export async function getMarketingManagerById(req: Request, res: Response) {
+    const { id } = req.params;
+    const marketingManagerRepository = new MarketingManagerRepository(db);
+    const idInt = parseInt(id);
+
+    try {
+        const user = await marketingManagerRepository.findManagerById(idInt);
+        if (!user) {
+            res.status(404).json({ message: "Marketing manager not found" });
+            return;
+        }
+        res.json(MarketingManagerMapper.toDTO(user));
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+
+}
+
 export async function addMarketingManager(req: Request, res: Response) {
     const { name, surname, email, password } = req.body;
     const userRepository = new UserRepository(db);

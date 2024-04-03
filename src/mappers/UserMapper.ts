@@ -4,36 +4,17 @@ import { UserRole } from '../enums/UserRole';
 import { PhoneOperator } from '../models/PhoneOperator';
 import { PhoneOperatorMapper } from './PhoneOperatorMapper';
 import { MarketingManager } from '../models/MarketingManager';
+import { SalesAgent } from '../models/SalesAgent';
 
 export class UserMapper {
-    public static toDTO(user: User, detailed: boolean = false): UserDTO {
-        if (detailed) {
-            switch (user.role) {
-                case UserRole.PHONE_OPERATOR:
-                    const phoneOperatorDTO = PhoneOperatorMapper.toDTO(<PhoneOperator>user);
-                    return {
-                        ...phoneOperatorDTO,
-                        role: UserRole[user.role]
-                    };
-                default:
-                    return {
-                        id: user.id,
-                        name: user.name,
-                        surname: user.surname,
-                        email: user.email,
-                        role: UserRole[user.role]
-                    };
-            }
-        }
-        else {
-            return {
-                id: user.id,
-                name: user.name,
-                surname: user.surname,
-                email: user.email,
-                role: UserRole[user.role]
-            };
-        }
+    public static toDTO(user: User): UserDTO {
+        return {
+            id: user.id,
+            name: user.name,
+            surname: user.surname,
+            email: user.email,
+            role: UserRole[user.role]
+        };
     }
 
     public static toPersistence(user: User): any {
@@ -60,6 +41,9 @@ export class UserMapper {
                 break;
             case UserRole.MARKETING_MANAGER:
                 userModel = new MarketingManager(user.name, user.surname, user.email, user.passwordHash);
+                break;
+            case UserRole.SALES_AGENT:
+                userModel = new SalesAgent(user.name, user.surname, user.email, user.passwordHash);
                 break;
             default:
                 throw new Error("Invalid user role");

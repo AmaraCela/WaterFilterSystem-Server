@@ -9,18 +9,13 @@ import { handleException } from "./utils/ErrorHandler";
 import { ScheduleMapper } from "../mappers/ScheduleMapper";
 import { AgentScheduleRepository } from "../repos/AgentScheduleRepository";
 import { UserRole } from "../enums/UserRole";
+import { SalesAgentRepository } from "../repos/SalesAgentRepository";
+import { AgentSchedule } from "../models/AgentSchedule";
 
 const { param, body } = require('express-validator');
 
-export const idValidator = [
-    param('id').exists().isInt().withMessage("Invalid id")
-]
-
-export const callValidator = [
-    body('day').exists().withMessage("day field required").bail()
-        .isISO8601().withMessage("day field must be a valid date in ISO8601 format"),
-    body('startTime').exists().withMessage("startTime field required"),
-    body('endTime').exists().withMessage("endTime field required")
+export const scheduleIdValidator = [
+    param('scheduleId').exists().isInt().withMessage("Invalid schedule id")
 ]
 
 export async function getAllSchedules(req: Request, res: Response) {
@@ -29,7 +24,7 @@ export async function getAllSchedules(req: Request, res: Response) {
         const schedules = await agentScheduleRepository.getAll();
         res.json(schedules.map(ScheduleMapper.toDTO));
     }
-    catch(error) {
+    catch (error) {
         handleException(res, error);
     }
 }
@@ -43,19 +38,14 @@ export async function getSchedulesOfAgent(req: Request, res: Response) {
     try {
         const user = await salesAgentRepository.findUserById(idInt);
         if (!user) {
-            res.status(404).json({ message: "User not found" });
-            return;
-        }
-        
-        if (user.role !== UserRole.SALES_AGENT) {
-            res.status(400).json({ message: "User is not a sales agent" });
+            res.status(404).json({ message: "Sales agent not found" });
             return;
         }
         
         const agentSchedules = await agentScheduleRepository.getByAgentId(idInt);
         res.json(agentSchedules.map(ScheduleMapper.toDTO));
     }
-    catch(error) {
+    catch (error) {
         handleException(res, error);
     }
 }
@@ -64,38 +54,36 @@ export async function addScheduleToAgent(req: Request, res: Response) {
     const { day, startTime, endTime } = req.body;
     const { id } = req.params;
     const agentScheduleRepository = new AgentScheduleRepository(db);
-    const salesAgentRepository = new UserRepository(db);
+    const salesAgentRepository = new SalesAgentRepository(db);
     
     const idInt = parseInt(id);
     try {
-        const user = await salesAgentRepository.findUserById(idInt);
+        const user = await salesAgentRepository.findAgentById(idInt);
         if (!user) {
-            res.status(404).json({ message: "User not found" });
+            res.status(404).json({ message: "Sales agent not found" });
             return;
         }
-        
-        if (user.role !== UserRole.SALES_AGENT) {
-            res.status(400).json({ message: "User is not a sales agent" });
-            return;
-        }
-        
-        const schedule = ScheduleMapper.toDomain({ day, startTime, endTime, salesAgent: idInt });
-        const savedSchedule = await agentScheduleRepository.save(schedule);
-        res.json(ScheduleMapper.toDTO(savedSchedule));
+
+        let schedule = new AgentSchedule(day, startTime, endTime, idInt);
+        schedule.ensureValidSchedule();
+
+        schedule = await agentScheduleRepository.save(schedule);
+        res.json(ScheduleMapper.toDTO(schedule));
     }
-    catch(error) {
+    catch (error) {
         handleException(res, error);
     }
 }
 
 export async function updateSchedule(req: Request, res: Response) {
     const { day, startTime, endTime } = req.body;
-    const { id } = req.params;
+    const { id, scheduleId } = req.params;
     const agentScheduleRepository = new AgentScheduleRepository(db);
 
     const idInt = parseInt(id);
+    const scheduleIdInt = parseInt(scheduleId);
     try {
-        const schedule = await agentScheduleRepository.getByScheduleId(idInt);
+        const schedule = await agentScheduleRepository.getByScheduleId(idInt, scheduleIdInt);
         if (!schedule) {
             res.status(404).json({ message: "Schedule not found" });
             return;
@@ -104,22 +92,24 @@ export async function updateSchedule(req: Request, res: Response) {
         schedule.day = new Date(day);
         schedule.startTime = startTime;
         schedule.endTime = endTime;
+        schedule.ensureValidSchedule();
         
         await agentScheduleRepository.save(schedule);
         res.json(ScheduleMapper.toDTO(schedule));
     }
-    catch(error) {
+    catch (error) {
         handleException(res, error);
     }
 }
 
 export async function deleteSchedule(req: Request, res: Response) {
-    const { id } = req.params;
+    const { id, scheduleId } = req.params;
     const agentScheduleRepository = new AgentScheduleRepository(db);
 
     const idInt = parseInt(id);
+    const scheduleIdInt = parseInt(scheduleId);
     try {
-        const schedule = await agentScheduleRepository.getByScheduleId(idInt);
+        const schedule = await agentScheduleRepository.getByScheduleId(idInt, scheduleIdInt);
         if (!schedule) {
             res.status(404).json({ message: "Schedule not found" });
             return;
@@ -128,7 +118,7 @@ export async function deleteSchedule(req: Request, res: Response) {
         await agentScheduleRepository.delete(schedule);
         res.status(204).send();
     }
-    catch(error) {
+    catch (error) {
         handleException(res, error);
     }
 }

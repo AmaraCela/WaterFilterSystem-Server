@@ -27,8 +27,8 @@ export class MarketingManagerMapper {
             return user;
         }
 
-        const manager = new MarketingManager(user.name, user.surname, user.email, user.passwordHash);
-        manager.id = user.user_id;
+        const manager = new MarketingManager(user.User.name, user.User.surname, user.User.email, user.User.passwordHash);
+        manager.id = user.manager_id;
 
         return manager;
     }

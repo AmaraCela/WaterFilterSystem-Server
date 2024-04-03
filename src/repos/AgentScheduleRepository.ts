@@ -42,11 +42,12 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
         return schedules.map(ScheduleMapper.toDomain);
     }
 
-    async getByScheduleId(scheduleId: number): Promise<AgentSchedule> {
+    async getByScheduleId(salesAgentId: number, scheduleId: number): Promise<AgentSchedule> {
         this.deleteOldSchedules();
 
         const schedule = await this.models.AgentSchedule.findOne({
             where: {
+                salesAgent: salesAgentId,
                 schedule_id: scheduleId
             }
         });
@@ -59,6 +60,7 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
 
         const scheduleExists = await this.models.AgentSchedule.findOne({
             where: {
+                salesAgent: schedule.salesAgent,
                 schedule_id: schedule.id
             }
         });
@@ -69,6 +71,7 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     async delete(schedule: AgentSchedule): Promise<any> {
         return await this.models.AgentSchedule.destroy({
             where: {
+                salesAgent: schedule.salesAgent,
                 schedule_id: schedule.id
             }
         })
@@ -77,6 +80,7 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     async save(schedule: AgentSchedule): Promise<any> {
         let scheduleObj = await this.models.AgentSchedule.findOne({
             where: {
+                salesAgent: schedule.salesAgent,
                 schedule_id: schedule.id
             }
         });
