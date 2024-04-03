@@ -56,17 +56,22 @@ export async function getBuyers(req: Request, res: Response) {
 }
 
 export async function getAllClients(req: Request, res: Response) {
-    const { status, type } = req.query;
+    const { status, type, search } = req.query;
     if (status) {
         getClientsByStatus(req, res);
         return;
     }
-    
-    if(type && type === "Buyers") {
+
+    if (type && type === "Buyers") {
         getBuyers(req, res);
         return;
     }
-    
+
+    if (search) {
+        searchClients(req, res);
+        return;
+    }
+
     const clientRepository = new ClientRepository(db);
     try {
         const clients = await clientRepository.getAll();
@@ -98,7 +103,7 @@ export async function getClientById(req: Request, res: Response) {
 export async function addClient(req: Request, res: Response) {
     const clientRepository = new ClientRepository(db);
     const { name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, status, assigenedOperator, referredBy, referredInSale } = req.body;
-    
+
     try {
         let client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, status, assigenedOperator, referredBy, referredInSale);
         client = await clientRepository.save(client);
@@ -144,9 +149,23 @@ export async function deleteClient(req: Request, res: Response) {
             res.status(404).json({ message: "Client not found" });
             return;
         }
-        
+
         await clientRepository.delete(client);
         res.status(204).send();
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+}
+
+async function searchClients(req: Request, res: Response) {
+    const clientRepository = new ClientRepository(db);
+    const { search } = req.query;
+
+    try {
+        const clients = await clientRepository.findClientsByName(search as string);
+        res.status(200).json(clients);
+
     }
     catch (error) {
         handleException(res, error);

@@ -2,14 +2,15 @@ import { ClientStatus } from "../enums/ClientStatus";
 import { ClientMapper } from "../mappers/ClientMapper";
 import { Client } from "../models/Client";
 import { Repository } from "./Repository";
+import { Op } from "sequelize";
 
 export class ClientRepository implements Repository<Client> {
     private models: any;
 
-    constructor (models: any) {
+    constructor(models: any) {
         this.models = models;
     }
-    
+
     async getAll(): Promise<Client[]> {
         const clients = await this.models.Client.findAll();
         return clients.map(ClientMapper.toDomain);
@@ -24,7 +25,7 @@ export class ClientRepository implements Repository<Client> {
 
         return clients.map(ClientMapper.toDomain);
     }
-    
+
     async getWaitListClients(): Promise<Client[]> {
         const clients = await this.models.Client.findAll({
             where: {
@@ -43,7 +44,7 @@ export class ClientRepository implements Repository<Client> {
 
         return !!clientExists;
     }
-    
+
     async delete(client: Client): Promise<any> {
         // fsr cascade doesn't work if you do Client.destroy directly
         const clientFound = await this.models.Client.findOne({
@@ -61,7 +62,7 @@ export class ClientRepository implements Repository<Client> {
                 client_id: client.id
             }
         });
-        
+
         if (clientObj != null) {
             clientObj = await clientObj.update(ClientMapper.toPersistence(client));
         } else {
@@ -88,5 +89,17 @@ export class ClientRepository implements Repository<Client> {
             }
         });
         return buyers.map(ClientMapper.toDomain);
+    }
+
+    async findClientsByName(name: string): Promise<Client[]> {
+        const clients = await this.models.Client.findAll({
+            where: {
+                [Op.or]: [
+                    { name: { [Op.like]: `%${name}%` } },
+                    { surname: { [Op.like]: `%${name}%` } }
+                ]
+            }
+        });
+        return clients.map(ClientMapper.toDomain);
     }
 }
