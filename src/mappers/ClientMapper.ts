@@ -19,6 +19,8 @@ export class ClientMapper {
             status: ClientStatus[client.status],
             assignedOperator: client.assignedOperator,
             referredInSale: client.referredInSale,
+            createdAt: client.createdAt,
+
         };
     }
 
@@ -57,9 +59,12 @@ export class ClientMapper {
             ClientStatus[<string>client.status as keyof typeof ClientStatus],
             client.referredBy,
             client.assignedOperator,
-            client.referredInSale
+            client.referredInSale,
+            
         );
         clientModel.id = client.client_id;
+        clientModel.createdAt = client.createdAt;
+
         
         return clientModel;
     }

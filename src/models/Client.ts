@@ -14,6 +14,8 @@ export class Client {
     referredBy: Client | null;
     assignedOperator: number | null;
     referredInSale: number | null;
+    createdAt: any;
+    
 
     constructor (name: string | null = null, surname: string | null = null, phoneNo: string, address: string | null = null, profession: string | null = null, hasMadePurchase: boolean = false, lastCallDate: Date | null = null, nextContactDate: Date | null = null, referrals: Array<number> = [], status: ClientStatus = ClientStatus.IN_WAITLIST, referredyBy: Client | null = null, assignedOperator: number, referredInSale: number | null = null) {
         this.id = -1;
@@ -30,5 +32,6 @@ export class Client {
         this.referredBy = referredyBy;
         this.assignedOperator = assignedOperator;
         this.referredInSale = referredInSale;
+    
     }
 }
