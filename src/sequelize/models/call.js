@@ -10,9 +10,6 @@ module.exports = function(sequelize, DataTypes) {
         },
         outcomeComment: {
             type: DataTypes.STRING
-        },
-        status: {
-            type: DataTypes.ENUM("Pending","Completed", "Cancelled", "Nonsuccessful")
         }
     });
 

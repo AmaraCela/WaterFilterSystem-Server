@@ -11,7 +11,8 @@ export class CallRepository implements Repository<Call> {
 
     async getAll(): Promise<Call[]> {
         const calls = await this.models.Call.findAll();
-        return calls.map(CallMapper.toDomain);
+        return calls;
+        // return calls.map(CallMapper.toDomain);
     }
 
     async exists(call: Call): Promise<boolean> {
