@@ -27,17 +27,15 @@ export async function createSession(req: Request, res: Response) {
             res.status(401).json({ message: "Wrong credentials" });
             return;
         }
-
         const result = await bcrypt.compare(password, user.passwordHash);
         if (!result) {
             res.status(401).json({ message: "Wrong credentials" });
             return;
         }
-
+        
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "30d" });
-
-        res.json({ token, user_id: user.id, name: user.name, surname: user.surname });
         res.cookie('session', token, { httpOnly: true });
+        res.json({ token, user_id: user.id, name: user.name, surname: user.surname });
     }
     catch (error) {
         handleException(res, error);
