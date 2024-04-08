@@ -13,6 +13,7 @@ export class AgentSchedule {
         this.salesAgent = salesAgent;
     }
 
+    // TODO ensure no overlaps
     ensureValidSchedule() {
         const now = new Date();
         if (this.day < now) {
