@@ -16,6 +16,20 @@ export const idValidator = [
 ]
 
 export const saleValidator = [
+    body('clientId').exists().withMessage("clientId field required").bail()
+        .isInt().withMessage("clientId field must be an integer"),
+    body('salesAgentId').exists().withMessage("salesAgentId field required").bail()
+        .isInt().withMessage("salesAgentId field must be an integer"),
+    body('phoneOperatorId').exists().withMessage("phoneOperatorId field required").bail()
+        .isInt().withMessage("phoneOperatorId field must be an integer"),
+    body('price').exists().withMessage("price field required").bail()
+        .isNumeric().withMessage("price field must be a number"),
+    body('warrantyExpiration').exists().withMessage("warrantyExpiration field required").bail()
+        .isISO8601().toDate().withMessage("warrantyExpiration must be a valid date in ISO8601 format"),
+    body('renewalDate').exists().withMessage("renewalDate field required").bail()
+        .isISO8601().toDate().withMessage("renewalDate must be a valid date in ISO8601 format"),
+    body('monthlyPayment').exists().withMessage("monthlyPayment field required").bail()
+        .isBoolean().withMessage("monthlyPayment field must be a boolean")
 ]
 
 export async function getAllSales(req: Request, res: Response) {

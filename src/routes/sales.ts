@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-import { deleteDebt, getDebtById, updateDebt } from "../controllers/DebtController";
+import { deleteDebt, getAllDebts, getDebtById, updateDebt } from "../controllers/DebtController";
 import { addSale, saleValidator, deleteSale, getAllSales, getSaleById, idValidator, updateSale, approveSale } from "../controllers/SaleController";
 import { handleInputValidationErrors } from "../controllers/utils/ErrorHandler";
 
 router.get("/", getAllSales);
 router.post("/", saleValidator, handleInputValidationErrors, addSale);
 
-router.get(":/id/debt", idValidator, handleInputValidationErrors, getDebtById);
+router.get("/debts", getAllDebts);
+
+router.get("/:id/debt", idValidator, handleInputValidationErrors, getDebtById);
 router.put("/:id/debt", idValidator, handleInputValidationErrors, updateDebt);
 router.delete("/:id/debt", idValidator, handleInputValidationErrors, deleteDebt);
 

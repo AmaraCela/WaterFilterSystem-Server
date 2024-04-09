@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
 import { DebtRepository } from "../repos/DebtRepository";
-import { ClientRepository } from "../repos/ClientRepository";
 import { Debt } from "../models/Debt";
 
 import db from "../sequelize/models";
 
 import { handleException } from "./utils/ErrorHandler";
 import { DebtMapper } from "../mappers/DebtMapper";
-import { PhoneOperatorRepository } from "../repos/PhoneOperatorRepository";
-import { PhoneOperator } from "../models/PhoneOperator";
 import { SaleRepository } from "../repos/SaleRepository";
 
 const { param, body } = require('express-validator');
@@ -17,6 +14,12 @@ export const idValidator = [
 ]
 
 export const debtValidator = [
+    body('nextPayment').exists().withMessage("nextPayment field required").bail()
+        .isISO8601().toDate().withMessage("nextPayment must be a valid date in ISO8601 format"),
+    body('amountPaidOff').exists().withMessage("amountPaidOff field required").bail()
+        .isNumeric().withMessage("amountPaidOff field must be a number"),
+    body('amountToCollect').exists().withMessage("amountToCollect field required").bail()
+        .isNumeric().withMessage("amountToCollect field must be a number"),
 ]
 
 export async function getAllDebts(req: Request, res: Response) {

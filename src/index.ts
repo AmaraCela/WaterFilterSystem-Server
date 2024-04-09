@@ -30,7 +30,7 @@ app.use('/api/sales', saleRouter);
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
 }).then(() => {
-    db.sequelize.sync();
+    // db.sequelize.sync();
 }).catch((err: any) => {
     console.log("Error: " + err);
 })
