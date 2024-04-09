@@ -12,7 +12,11 @@ export class ClientRepository implements Repository<Client> {
     }
 
     async getAll(): Promise<Client[]> {
-        const clients = await this.models.Client.findAll();
+        const clients = await this.models.Client.findAll({
+            include: [
+                this.models.Client
+            ]
+        });
         return clients.map(ClientMapper.toDomain);
     }
 
@@ -20,7 +24,10 @@ export class ClientRepository implements Repository<Client> {
         const clients = await this.models.Client.findAll({
             where: {
                 status: ClientStatus[ClientStatus.IN_REDLIST]
-            }
+            },
+            include: [
+                this.models.Client
+            ]
         });
 
         return clients.map(ClientMapper.toDomain);
@@ -30,7 +37,10 @@ export class ClientRepository implements Repository<Client> {
         const clients = await this.models.Client.findAll({
             where: {
                 status: ClientStatus[ClientStatus.IN_WAITLIST]
-            }
+            },
+            include: [
+                this.models.Client
+            ]
         });
         return clients.map(ClientMapper.toDomain);
     }
@@ -76,7 +86,10 @@ export class ClientRepository implements Repository<Client> {
         const clientObj = await this.models.Client.findOne({
             where: {
                 client_id: id
-            }
+            },
+            include: [
+                this.models.Client
+            ]
         });
 
         return ClientMapper.toDomain(clientObj);
@@ -86,7 +99,10 @@ export class ClientRepository implements Repository<Client> {
         const buyers = await this.models.Client.findAll({
             where: {
                 hasMadePurchase: 1,
-            }
+            },
+            include: [
+                this.models.Client
+            ]
         });
         return buyers.map(ClientMapper.toDomain);
     }
@@ -98,7 +114,10 @@ export class ClientRepository implements Repository<Client> {
                     { name: { [Op.like]: `%${name}%` } },
                     { surname: { [Op.like]: `%${name}%` } }
                 ]
-            }
+            },
+            include: [
+                this.models.Client
+            ]
         });
         return clients.map(ClientMapper.toDomain);
     }

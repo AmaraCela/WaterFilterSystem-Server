@@ -19,8 +19,7 @@ export class ClientMapper {
             status: ClientStatus[client.status],
             assignedOperator: client.assignedOperator,
             referredInSale: client.referredInSale,
-            createdAt: client.createdAt,
-
+            createdAt: client.createdAt ? client.createdAt.toISOString() : null
         };
     }
 
@@ -37,7 +36,7 @@ export class ClientMapper {
             referredBy: client.referredBy ? client.referredBy.id : null,
             status: ClientStatus[client.status],
             assignedOperator: client.assignedOperator,
-            referredInSale: client.referredInSale,
+            referredInSale: client.referredInSale
         };
     }
 
@@ -55,16 +54,15 @@ export class ClientMapper {
             client.hasMadePurchase,
             new Date(client.lastCallDate),
             new Date(client.nextContactDate),
-            client.referrals,
+            client.Clients.map((client: any) => client.client_id),
             ClientStatus[<string>client.status as keyof typeof ClientStatus],
             client.referredBy,
             client.assignedOperator,
             client.referredInSale,
-            
+            new Date(client.createdAt)
         );
         clientModel.id = client.client_id;
         clientModel.createdAt = client.createdAt;
-
         
         return clientModel;
     }

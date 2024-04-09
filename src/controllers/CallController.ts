@@ -7,7 +7,8 @@ import db from "../sequelize/models";
 
 import { handleException } from "./utils/ErrorHandler";
 import { CallMapper } from "../mappers/CallMapper";
-import { UserRepository } from "../repos/UserRepository";
+import { PhoneOperatorRepository } from "../repos/PhoneOperatorRepository";
+import { PhoneOperator } from "../models/PhoneOperator";
 
 const { param, body } = require('express-validator');
 export const idValidator = [
@@ -51,7 +52,7 @@ export async function addCall(req: Request, res: Response) {
     const { clientId, phoneOperatorId, scheduledTime } = req.body;
     const callRepository = new CallRepository(db);
     const clientRepository = new ClientRepository(db);
-    const userRepository = new UserRepository(db);
+    const phoneOperatorRepository = new PhoneOperatorRepository(db);
 
     try {
         const client = await clientRepository.findClientById(clientId);
@@ -60,13 +61,13 @@ export async function addCall(req: Request, res: Response) {
             return;
         }
 
-        const phoneOperator = await userRepository.findUserById(phoneOperatorId);
+        const phoneOperator = await phoneOperatorRepository.findOperatorById(phoneOperatorId);
         if (!phoneOperator) {
             res.status(400).json({ message: "Phone operator not found" });
             return;
         }
 
-        let call = new Call(client.id, phoneOperator.id, new Date(scheduledTime));
+        let call = new Call(clientId, phoneOperatorId, new Date(scheduledTime));
         call = await callRepository.save(call);
         res.status(201).json(CallMapper.toDTO(call));
     } catch (error) {
@@ -78,9 +79,23 @@ export async function updateCall(req: Request, res: Response) {
     const { clientId, phoneOperatorId, scheduledTime, outcomeComment, completed } = req.body;
     const { id } = req.params;
     const callRepository = new CallRepository(db);
+    const clientRepository = new ClientRepository(db);
+    const phoneOperatorRepository = new PhoneOperatorRepository(db);
 
     const idInt = parseInt(id);
     try {
+        const client = await clientRepository.findClientById(clientId);
+        if (!client) {
+            res.status(400).json({ message: "Client not found" });
+            return;
+        }
+
+        const phoneOperator = await phoneOperatorRepository.findOperatorById(phoneOperatorId);
+        if (!phoneOperator) {
+            res.status(400).json({ message: "Phone operator not found" });
+            return;
+        }
+
         let call = await callRepository.findCallById(idInt);
         if (!call) {
             res.status(404).json({ message: "Call not found" });

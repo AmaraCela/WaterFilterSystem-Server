@@ -13,5 +13,5 @@ export interface ClientDTO {
     status: string,
     assignedOperator: number | null,
     referredInSale: number | null,
-    createdAt: Date,
+    createdAt: string | null
 }

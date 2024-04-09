@@ -105,7 +105,7 @@ export async function addClient(req: Request, res: Response) {
     const { name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, status, assigenedOperator, referredBy, referredInSale } = req.body;
 
     try {
-        let client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, status, assigenedOperator, referredBy, referredInSale);
+        let client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, [], status, referredBy, assigenedOperator, referredInSale);
         client = await clientRepository.save(client);
         res.status(201).json(ClientMapper.toDTO(client));
     }
