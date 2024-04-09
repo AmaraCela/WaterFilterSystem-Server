@@ -9,6 +9,5 @@ export interface SaleDTO {
     warrantyExpiration: string,
     renewalDate: string,
     monthlyPayment: boolean,
-    debt: number | null,
     referredClients: number[]
 }

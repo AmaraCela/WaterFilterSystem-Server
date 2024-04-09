@@ -14,7 +14,6 @@ export class SaleMapper {
             warrantyExpiration: sale.warrantyExpiration.toISOString(),
             renewalDate: sale.renewalDate.toISOString(),
             monthlyPayment: sale.monthlyPayment,
-            debt: sale.debt,
             referredClients: sale.referredClients
         };
     }
@@ -28,8 +27,7 @@ export class SaleMapper {
             price: sale.price,
             warrantyExpiration: sale.warrantyExpiration.toISOString(),
             renewalDate: sale.renewalDate.toISOString(),
-            monthlyPayment: sale.monthlyPayment,
-            debt: sale.debt
+            monthlyPayment: sale.monthlyPayment
         };
     }
 
@@ -46,7 +44,6 @@ export class SaleMapper {
             new Date(sale.warrantyExpiration),
             new Date(sale.renewalDate),
             sale.monthlyPayment,
-            sale.debt,
             sale.referredClients,
             sale.createdAt,
             sale.approved

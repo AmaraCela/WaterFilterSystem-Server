@@ -1,14 +1,13 @@
 module.exports = function(sequelize, DataTypes) {
     const Debt = sequelize.define("Debt", {
-        debt_id: {
+        sale: {
             type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
+            primaryKey: true
         },
         nextPayment: {
             type: DataTypes.DATE
         },
-        paidOff: {
+        amountPaidOff: {
             type: DataTypes.INTEGER,
             defaultValue: 0
         },

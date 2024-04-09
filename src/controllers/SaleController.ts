@@ -110,7 +110,7 @@ export async function updateSale(req: Request, res: Response) {
             return;
         }
 
-        sale = new Sale(clientId, salesAgentId, phoneOperatorId, price, new Date(warrantyExpiration), new Date(renewalDate), monthlyPayment, sale.debt, sale.referredClients, sale.time, sale.approved);
+        sale = new Sale(clientId, salesAgentId, phoneOperatorId, price, new Date(warrantyExpiration), new Date(renewalDate), monthlyPayment, sale.referredClients, sale.time, sale.approved);
         sale.id = idInt;
 
         await saleRepository.save(sale);

@@ -12,8 +12,7 @@ export class SalesAgentRepository {
     async getAll(): Promise<SalesAgent[]> {
         const users = await this.models.SalesAgent.findAll({
             include: [
-                this.models.User, 
-                this.models.AgentSchedule
+                this.models.User
             ]
         });
 
@@ -27,8 +26,7 @@ export class SalesAgentRepository {
                 agent_id: id
             },
             include: [
-                this.models.User, 
-                this.models.AgentSchedule
+                this.models.User
             ]
         });
 

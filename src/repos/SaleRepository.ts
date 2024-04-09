@@ -12,8 +12,7 @@ export class SaleRepository implements Repository<Sale> {
     async getAll(): Promise<Sale[]> {
         const sales = await this.models.Sale.findAll({
             include: [
-                this.models.Client,
-                this.models.Debt
+                this.models.Client
             ]
         });
         return sales.map(SaleMapper.toDomain);
@@ -60,8 +59,7 @@ export class SaleRepository implements Repository<Sale> {
                 sale_id: id
             },
             include: [
-                this.models.Client,
-                this.models.Debt
+                this.models.Client
             ]
         });
 
