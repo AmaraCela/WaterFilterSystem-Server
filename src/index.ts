@@ -27,6 +27,9 @@ app.use('/api/calls', callRouter);
 const saleRouter = require("./routes/sales");
 app.use('/api/sales', saleRouter);
 
+const meetingRouter = require("./routes/meetings");
+app.use('/api/meetings', meetingRouter);
+
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
 }).then(() => {
