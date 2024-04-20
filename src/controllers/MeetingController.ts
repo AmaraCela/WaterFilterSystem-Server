@@ -48,3 +48,7 @@ export async function addMeeting(req: Request, res: Response) {
     }
 
 }
+
+export async function deleteMeeting(req: Request, res: Response) {
+    const meetingRepository = new MeetingRepository(db);
+}
