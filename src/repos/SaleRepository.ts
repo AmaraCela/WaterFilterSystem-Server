@@ -18,6 +18,15 @@ export class SaleRepository implements Repository<Sale> {
         return sales.map(SaleMapper.toDomain);
     }
 
+    async getAllOfAgent(agentid: number): Promise<Sale []>{
+        const sales = await this.models.Sale.findAll({
+            where: {
+                salesAgent: agentid
+            }
+        });
+        return sales.map(SaleMapper.toDomain);
+    }
+
     async exists(sale: Sale): Promise<boolean> {
         const saleExists = await this.models.Sale.findOne({
             where: {

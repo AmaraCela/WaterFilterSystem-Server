@@ -33,6 +33,11 @@ export const saleValidator = [
 ]
 
 export async function getAllSales(req: Request, res: Response) {
+    const { agentId } = req.query;
+    if(agentId) {
+        getSalesOfAgent(req, res);
+        return;
+    }
     const saleRepository = new SaleRepository(db);
     const sales = await saleRepository.getAll();
     res.json(sales.map(sale => SaleMapper.toDTO(sale)));
@@ -172,6 +177,21 @@ export async function deleteSale(req: Request, res: Response) {
         res.status(204).send();
     }
     catch (error) {
+        handleException(res, error);
+    }
+}
+
+
+async function getSalesOfAgent(req: Request, res: Response) {
+    const { agentid } = req.query;
+    const idInt = parseInt(agentid as string);
+
+    const salesRepository = new SaleRepository(db);
+    try {
+        let sales = await salesRepository.getAllOfAgent(idInt);
+        return sales;
+    }
+    catch(error) {
         handleException(res, error);
     }
 }

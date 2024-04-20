@@ -1,4 +1,3 @@
-import { where } from "sequelize";
 import { Meeting } from "../models/Meeting";
 export class MeetingRepository {
     private models: any;
