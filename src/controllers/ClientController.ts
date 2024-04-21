@@ -105,7 +105,16 @@ export async function addClient(req: Request, res: Response) {
     const { name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, status, assigenedOperator, referredBy, referredInSale } = req.body;
 
     try {
-        let client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, [], status, referredBy, assigenedOperator, referredInSale);
+        let referredByClientId: number|null = null;
+        if (referredBy) {
+            const referredByClient = await clientRepository.findClientById(referredBy);
+            if (!referredByClient) {
+                res.status(400).json({ message: "Referrer not found" });
+                return;
+            }
+            referredByClientId = referredByClient.id;
+        }
+        let client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, [], status, referredByClientId, assigenedOperator, referredInSale);
         client = await clientRepository.save(client);
         res.status(201).json(ClientMapper.toDTO(client));
     }
