@@ -34,7 +34,7 @@ export class MeetingRepository {
     }
 
     async delete(meeting_id: number){
-        const meetingFound = await this.models.Meeting.findAll({
+        const meetingFound = await this.models.Meeting.findOne({
             where: {
                 meeting_id
             }

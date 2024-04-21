@@ -50,8 +50,9 @@ export async function addMeeting(req: Request, res: Response) {
 }
 
 export async function deleteMeeting(req: Request, res: Response) {
+    console.log('delete is called');
     const meetingRepository = new MeetingRepository(db);
-    const { meeting_id } = req.query;
+    const { meeting_id } = req.body;
 
     const idInt = parseInt(meeting_id as string);
 
