@@ -44,7 +44,7 @@ export class SaleMapper {
             new Date(sale.warrantyExpiration),
             new Date(sale.renewalDate),
             sale.monthlyPayment,
-            sale.referredClients,
+            sale.ReferredClients.map((client: any) => client.client_id),
             sale.createdAt,
             sale.approved
         );

@@ -61,7 +61,6 @@ export async function getSaleById(req: Request, res: Response) {
 
 export async function addSale(req: Request, res: Response) {
     const { clientId, salesAgentId, phoneOperatorId, price, warrantyExpiration, renewalDate, monthlyPayment } = req.body;
-    console.log('ADDDING SALEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
     const saleRepository = new SaleRepository(db);
     const clientRepository = new ClientRepository(db);
     const phoneOperatorRepository = new PhoneOperatorRepository(db);
@@ -86,13 +85,10 @@ export async function addSale(req: Request, res: Response) {
             return;
         }
 
-        console.log('HEEEEEEEEEEEEEEEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
         let sale = new Sale(clientId, salesAgentId, phoneOperatorId, price, new Date(warrantyExpiration), new Date(renewalDate), monthlyPayment);
         sale = await saleRepository.save(sale);
         res.status(201).json(SaleMapper.toDTO(sale));
     } catch (error) {
-        console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeerorrrrrrrrrrrr');
-        console.log(error);
         handleException(res, error);
     }
 }
@@ -154,6 +150,7 @@ export async function approveSale(req: Request, res: Response) {
             return;
         }
 
+        
         sale.approved = true;
         await saleRepository.save(sale);
         res.json(SaleMapper.toDTO(sale));

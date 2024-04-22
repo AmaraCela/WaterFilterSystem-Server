@@ -52,7 +52,8 @@ module.exports = function(sequelize, DataTypes) {
         });
 
         Sale.hasMany(models.Client, {
-            foreignKey: "referredInSale"
+            foreignKey: "referredInSale",
+            as: "ReferredClients"
         });
 
         Sale.hasOne(models.Debt, {

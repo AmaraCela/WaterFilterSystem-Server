@@ -67,9 +67,10 @@ export class SaleRepository implements Repository<Sale> {
             where: {
                 sale_id: id
             },
-            include: [
-                this.models.Client
-            ]
+            include: [{
+                model: this.models.Client,
+                as: "ReferredClients"
+            }]
         });
 
         return SaleMapper.toDomain(saleObj);
