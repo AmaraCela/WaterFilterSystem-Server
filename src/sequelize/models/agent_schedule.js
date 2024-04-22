@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         day: {
             type: DataTypes.DATE,
-            allowNull: false
+            // allowNull: false
         },
         startTime: {
             type: DataTypes.STRING,

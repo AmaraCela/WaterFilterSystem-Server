@@ -88,7 +88,7 @@ export class ClientRepository implements Repository<Client> {
                 client_id: id
             },
             include: [
-                this.models.Client
+                this.models.Client,
             ]
         });
 
