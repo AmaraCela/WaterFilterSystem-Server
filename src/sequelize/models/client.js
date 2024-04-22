@@ -43,7 +43,8 @@ module.exports = function(sequelize, DataTypes) {
         });
     
         Client.belongsTo(models.Client, {
-            foreignKey: "referredBy"
+            foreignKey: "referredBy",
+            as: "ReferredBy"
         });
 
         Client.belongsTo(models.Sale, {
@@ -51,7 +52,8 @@ module.exports = function(sequelize, DataTypes) {
         });
 
         Client.hasMany(models.Client, {
-            foreignKey: "referredBy"
+            foreignKey: "referredBy",
+            as: "Referrals"
         });
 
         Client.hasMany(models.Call, {

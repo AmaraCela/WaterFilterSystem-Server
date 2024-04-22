@@ -13,9 +13,10 @@ export class ClientRepository implements Repository<Client> {
 
     async getAll(): Promise<Client[]> {
         const clients = await this.models.Client.findAll({
-            include: [
-                this.models.Client
-            ]
+            include: [{
+                model: this.models.Client,
+                as: "Referrals"
+            }]
         });
         return clients.map(ClientMapper.toDomain);
     }
@@ -25,9 +26,10 @@ export class ClientRepository implements Repository<Client> {
             where: {
                 status: ClientStatus[ClientStatus.IN_REDLIST]
             },
-            include: [
-                this.models.Client
-            ]
+            include: [{
+                model: this.models.Client,
+                as: "Referrals"
+            }]
         });
 
         return clients.map(ClientMapper.toDomain);
@@ -38,9 +40,10 @@ export class ClientRepository implements Repository<Client> {
             where: {
                 status: ClientStatus[ClientStatus.IN_WAITLIST]
             },
-            include: [
-                this.models.Client
-            ]
+            include: [{
+                model: this.models.Client,
+                as: "Referrals"
+            }]
         });
         return clients.map(ClientMapper.toDomain);
     }
@@ -87,9 +90,10 @@ export class ClientRepository implements Repository<Client> {
             where: {
                 client_id: id
             },
-            include: [
-                this.models.Client,
-            ]
+            include: [{
+                model: this.models.Client,
+                as: "Referrals"
+            }]
         });
 
         return ClientMapper.toDomain(clientObj);
@@ -100,9 +104,10 @@ export class ClientRepository implements Repository<Client> {
             where: {
                 hasMadePurchase: 1,
             },
-            include: [
-                this.models.Client
-            ]
+            include: [{
+                model: this.models.Client,
+                as: "Referrals"
+            }]
         });
         return buyers.map(ClientMapper.toDomain);
     }
@@ -115,9 +120,10 @@ export class ClientRepository implements Repository<Client> {
                     { surname: { [Op.like]: `%${name}%` } }
                 ]
             },
-            include: [
-                this.models.Client
-            ]
+            include: [{
+                model: this.models.Client,
+                as: "Referrals"
+            }]
         });
         return clients.map(ClientMapper.toDomain);
     }
