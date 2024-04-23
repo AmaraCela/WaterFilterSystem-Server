@@ -4,6 +4,7 @@ const router = express.Router();
 import { getAllUsers, getUserById, deleteUser, idValidator, userValidator } from "../controllers/UserController";
 import { getAllPhoneOperators, addPhoneOperator, updatePhoneOperator, getPhoneOperatorById } from "../controllers/PhoneOperatorController";
 import { getAllMarketingManagers, addMarketingManager, updateMarketingManager, getMarketingManagerById } from "../controllers/MarketingManagerController";
+import { getAllChiefOfOperations, addChiefOfOperations, updateChiefOfOperations, getChiefOfOperationsById } from "../controllers/ChiefOfOperationsController";
 import { getAllSalesAgents, addSalesAgent, updateSalesAgent, getSalesAgentById } from "../controllers/SalesAgentController";
 import { addScheduleToAgent, deleteSchedule, getAllSchedules, getSchedulesOfAgent, updateSchedule, scheduleIdValidator } from "../controllers/ScheduleController";
 
@@ -18,6 +19,11 @@ router.get("/marketingmanagers", getAllMarketingManagers);
 router.post("/marketingmanagers", userValidator, handleInputValidationErrors, addMarketingManager);
 router.get("/marketingmanagers/:id", idValidator, handleInputValidationErrors, getMarketingManagerById);
 router.put("/marketingmanagers/:id", idValidator, userValidator, handleInputValidationErrors, updateMarketingManager);
+
+router.get("/chiefofoperations", getAllChiefOfOperations);
+router.post("/chiefofoperations", userValidator, handleInputValidationErrors, addChiefOfOperations);
+router.get("/chiefofoperations/:id", idValidator, handleInputValidationErrors, getChiefOfOperationsById);
+router.put("/chiefofoperations/:id", idValidator, userValidator, handleInputValidationErrors, updateChiefOfOperations);
 
 router.get("/salesagents/:id/schedules", idValidator, handleInputValidationErrors, getSchedulesOfAgent);
 router.post("/salesagents/:id/schedules", idValidator, handleInputValidationErrors, addScheduleToAgent);
