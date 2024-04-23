@@ -143,6 +143,7 @@ export async function updateClient(req: Request, res: Response) {
         res.json(ClientMapper.toDTO(client));
     }
     catch (error) {
+        console.log(error);
         handleException(res, error);
     }
 }

@@ -127,4 +127,5 @@ export class ClientRepository implements Repository<Client> {
         });
         return clients.map(ClientMapper.toDomain);
     }
+
 }
