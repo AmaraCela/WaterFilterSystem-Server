@@ -31,8 +31,8 @@ export const saleValidator = [
 ]
 
 export async function getAllSales(req: Request, res: Response) {
-    const { agentId } = req.query;
-    if(agentId) {
+    const { agentid } = req.query;
+    if(agentid) {
         getSalesOfAgent(req, res);
         return;
     }
@@ -60,7 +60,7 @@ export async function getSaleById(req: Request, res: Response) {
 }
 
 export async function addSale(req: Request, res: Response) {
-    const { clientId, salesAgentId, phoneOperatorId, price, warrantyExpiration, renewalDate, monthlyPayment } = req.body;
+    const { clientId, salesAgentId, phoneOperatorId, price, warrantyExpiration, renewalDate, monthlyPayment, time } = req.body;
     const saleRepository = new SaleRepository(db);
     const clientRepository = new ClientRepository(db);
     const phoneOperatorRepository = new PhoneOperatorRepository(db);
@@ -85,10 +85,11 @@ export async function addSale(req: Request, res: Response) {
             return;
         }
 
-        let sale = new Sale(clientId, salesAgentId, phoneOperatorId, price, new Date(warrantyExpiration), new Date(renewalDate), monthlyPayment);
+        let sale = new Sale(clientId, salesAgentId, phoneOperatorId, price, new Date(warrantyExpiration), new Date(renewalDate), monthlyPayment, [], time, false);
         sale = await saleRepository.save(sale);
         res.status(201).json(SaleMapper.toDTO(sale));
     } catch (error) {
+        console.log(error);
         handleException(res, error);
     }
 }
@@ -188,7 +189,7 @@ async function getSalesOfAgent(req: Request, res: Response) {
     const salesRepository = new SaleRepository(db);
     try {
         let sales = await salesRepository.getAllOfAgent(idInt);
-        return sales;
+        res.status(200).json(sales);
     }
     catch(error) {
         handleException(res, error);

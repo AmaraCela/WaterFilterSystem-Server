@@ -22,9 +22,14 @@ export class SaleRepository implements Repository<Sale> {
         const sales = await this.models.Sale.findAll({
             where: {
                 salesAgent: agentid
-            }
+            }, 
+            include: [{
+                model: this.models.Client
+            }]
         });
-        return sales.map(SaleMapper.toDomain);
+        console.log(sales);
+        return sales;
+        // return sales.map(SaleMapper.toDomain);
     }
 
     async exists(sale: Sale): Promise<boolean> {

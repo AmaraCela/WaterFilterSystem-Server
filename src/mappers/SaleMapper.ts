@@ -27,7 +27,8 @@ export class SaleMapper {
             price: sale.price,
             warrantyExpiration: sale.warrantyExpiration.toISOString(),
             renewalDate: sale.renewalDate.toISOString(),
-            monthlyPayment: sale.monthlyPayment
+            monthlyPayment: sale.monthlyPayment,
+            time: sale.time,
         };
     }
 
@@ -44,7 +45,7 @@ export class SaleMapper {
             new Date(sale.warrantyExpiration),
             new Date(sale.renewalDate),
             sale.monthlyPayment,
-            sale.ReferredClients.map((client: any) => client.client_id),
+            sale.referredClients ? sale.ReferredClients.map((client: any) => client.client_id) : null,
             sale.createdAt,
             sale.approved
         );
