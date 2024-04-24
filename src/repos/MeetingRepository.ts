@@ -14,7 +14,10 @@ export class MeetingRepository {
         const meetings = this.models.Meeting.findAll({
             where: {
                 salesAgent: agentid,
-            }
+            },
+            include: [
+                this.models.Client
+            ]
         });
         return meetings;
     }
