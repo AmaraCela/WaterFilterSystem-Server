@@ -15,9 +15,10 @@ export class MeetingRepository {
             where: {
                 salesAgent: agentid,
             },
-            include: [
-                this.models.Client
-            ]
+            include: [{
+                model: this.models.Client,
+                attributes: [['client_id', 'id'], 'name', 'surname', 'address']
+            }]
         });
         return meetings;
     }
