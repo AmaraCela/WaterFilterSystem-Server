@@ -2,7 +2,7 @@ import { ClientStatus } from "../enums/ClientStatus";
 import { ClientMapper } from "../mappers/ClientMapper";
 import { Client } from "../models/Client";
 import { Repository } from "./Repository";
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 
 export class ClientRepository implements Repository<Client> {
     private models: any;
@@ -126,6 +126,21 @@ export class ClientRepository implements Repository<Client> {
             }]
         });
         return clients.map(ClientMapper.toDomain);
+    }
+
+    async findReferences() {
+        const references = await this.models.Client.findAll({
+            where: {
+                referredBy: { [Op.ne]: null }
+            },
+            include: {
+                model: this.models.Client,
+                as: 'ReferredBy',
+                attributes: [['client_id', 'id'], 'name', 'surname']
+            }
+        });
+        return references;
+        return references.map(ClientMapper.toDomain);
     }
 
 }

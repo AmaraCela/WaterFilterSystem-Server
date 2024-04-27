@@ -55,6 +55,19 @@ export async function getBuyers(req: Request, res: Response) {
 
 }
 
+export async function getReferences(req: Request, res: Response) {
+    const clientRepository = new ClientRepository(db);
+    try {
+        const references = await clientRepository.findReferences();
+        res.status(200).json(references);
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+
+}
+
+
 export async function getAllClients(req: Request, res: Response) {
     const { status, type, search } = req.query;
     if (status) {
@@ -66,6 +79,12 @@ export async function getAllClients(req: Request, res: Response) {
         getBuyers(req, res);
         return;
     }
+
+    if(type && type === "References") {
+        getReferences(req, res);
+        return; 
+    }
+
 
     if (search) {
         searchClients(req, res);
