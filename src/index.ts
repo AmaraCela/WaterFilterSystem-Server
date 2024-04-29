@@ -30,6 +30,9 @@ app.use('/api/sales', saleRouter);
 const meetingRouter = require("./routes/meetings");
 app.use('/api/meetings', meetingRouter);
 
+const commissionRouter = require("./routes/commissions");
+app.use('/api/commissions', commissionRouter);
+
 db.sequelize.authenticate().then(() => {
     console.log("Database connected");
 }).then(() => {

@@ -12,6 +12,10 @@ module.exports = function(sequelize, DataTypes) {
         approved: {
             type: DataTypes.BOOLEAN,
             allowNull: false
+        },
+        type: {
+            type: DataTypes.ENUM("REFERRAL", "SPIF", "TIERED"),
+            allowNull: false
         }
     });
 

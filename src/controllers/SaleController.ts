@@ -7,6 +7,7 @@ import { handleException } from "./utils/ErrorHandler";
 import { SaleMapper } from "../mappers/SaleMapper";
 import { PhoneOperatorRepository } from "../repos/PhoneOperatorRepository";
 import { SalesAgentRepository } from "../repos/SalesAgentRepository";
+import { CommissionRepository } from "../repos/CommissionRepository";
 
 const { param, body } = require('express-validator');
 export const idValidator = [
@@ -142,6 +143,7 @@ export async function updateSale(req: Request, res: Response) {
 export async function approveSale(req: Request, res: Response) {
     const { id } = req.params;
     const saleRepository = new SaleRepository(db);
+    const commissionRepository = new CommissionRepository(db);
     const idInt = parseInt(id);
 
     try {
@@ -150,10 +152,17 @@ export async function approveSale(req: Request, res: Response) {
             res.status(404).json({ message: "Sale not found" });
             return;
         }
-
         
         sale.approved = true;
         await saleRepository.save(sale);
+
+        const salesOfThisMonth = await saleRepository.getOfThisMonth();
+        const commissions = sale.generateCommissions(salesOfThisMonth.length);
+
+        for (let commission of commissions) {
+            await commissionRepository.save(commission);
+        }
+
         res.json(SaleMapper.toDTO(sale));
     }
     catch (error) {
