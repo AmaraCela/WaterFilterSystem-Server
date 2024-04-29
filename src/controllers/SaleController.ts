@@ -28,7 +28,8 @@ export const saleValidator = [
     body('renewalDate').exists().withMessage("renewalDate field required").bail()
         .isISO8601().toDate().withMessage("renewalDate must be a valid date in ISO8601 format"),
     body('monthlyPayment').exists().withMessage("monthlyPayment field required").bail()
-        .isBoolean().withMessage("monthlyPayment field must be a boolean")
+        .isBoolean().withMessage("monthlyPayment field must be a boolean"),
+    body('time').optional().isISO8601().toDate().withMessage("time must be a valid date in ISO8601 format")
 ]
 
 export async function getAllSales(req: Request, res: Response) {
