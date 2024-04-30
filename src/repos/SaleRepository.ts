@@ -19,6 +19,20 @@ export class SaleRepository implements Repository<Sale> {
         return sales.map(SaleMapper.toDomain);
     }
 
+    async getOfThisMonth(): Promise<Sale[]> {
+        const sales = await this.models.Sale.findAll({
+            where: {
+                createdAt: {
+                    [this.models.Sequelize.Op.gt]: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+                }
+            },
+            include: [
+                this.models.Client
+            ]
+        });
+        return sales.map(SaleMapper.toDomain);
+    }
+
     async getAllOfAgent(agentid: number): Promise<Sale []>{
         const sales = await this.models.Sale.findAll({
             where: {

@@ -1,3 +1,4 @@
+import { CommissionType } from "../enums/CommissionType";
 import { Commission } from "./Commission";
 
 export class Sale {
@@ -27,26 +28,37 @@ export class Sale {
         this.renewalDate = renewalDate;
     }
 
-    public generateCommissions(): Commission[] {
+    public generateCommissions(salesOfThisMonth: number): Commission[] {
         const commissions: Commission[] = [];
-        if (this.price == 0) {
-            for (const client of this.referredClients) {
-                commissions.push(new Commission(this.salesAgent, 0.5));
-            }
+        if (this.price == 0) {CommissionType
+            commissions.push(new Commission(this.salesAgent, CommissionType.REFERRAL, 0.5 * this.referredClients.length));
             return commissions;
         }
+        
+        // ?? is it 140 for after 3 sales or 140 for each of the first 3 sales?
+        // is it 150 * 5 or 150 * 2 + 10 * 3?
+        // do monthly payments count?
+        if (salesOfThisMonth == 3) {
+            commissions.push(new Commission(this.salesAgent, CommissionType.TIERED, 140 * 3));
+        }
+        else if (salesOfThisMonth == 5) {
+            commissions.push(new Commission(this.salesAgent, CommissionType.TIERED, 150 * 5));
+        }
+        else if (salesOfThisMonth == 7) {
+            commissions.push(new Commission(this.salesAgent, CommissionType.TIERED, 160 * 7));
+        }
 
-        commissions.push(new Commission(this.salesAgent, 1.5));
+        commissions.push(new Commission(this.phoneOperator, CommissionType.TIERED, 1.5));
         if (this.price >= 50) {
-            commissions.push(new Commission(this.phoneOperator, 5));
+            commissions.push(new Commission(this.phoneOperator, CommissionType.TIERED, 5));
         }
 
         if (this.price >= 295) {
             if (this.referredClients.length >= 10) {
-                commissions.push(new Commission(this.salesAgent, 25));
+                commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 25));
             }
             else {
-                commissions.push(new Commission(this.salesAgent, 20));
+                commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 20));
             }
 
             return commissions;
@@ -54,10 +66,10 @@ export class Sale {
 
         if (this.price >= 200) {
             if (this.referredClients.length >= 10) {
-                commissions.push(new Commission(this.salesAgent, 20));
+                commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 20));
             }
             else {
-                commissions.push(new Commission(this.salesAgent, 15));
+                commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 15));
             }
 
             return commissions;
@@ -65,10 +77,10 @@ export class Sale {
 
         if (this.price >= 100) {
             if (this.referredClients.length >= 10) {
-                commissions.push(new Commission(this.salesAgent, 15));
+                commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 15));
             }
             else {
-                commissions.push(new Commission(this.salesAgent, 10));
+                commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 10));
             }
 
             return commissions;
@@ -76,16 +88,15 @@ export class Sale {
 
         if (this.price >= 50) {
             if (this.referredClients.length >= 10) {
-                commissions.push(new Commission(this.salesAgent, 10));
+                commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 10));
             }
             else {
-                commissions.push(new Commission(this.salesAgent, 5));
+                commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 5));
             }
 
             return commissions;
         }
 
-        // TODO CHECK PREVIOUS SALES OF THE MONTH
         // TODO CALCULATE AFTER-INSTALL COMMISSIONS
         
         return commissions;

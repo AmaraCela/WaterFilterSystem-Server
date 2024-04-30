@@ -75,16 +75,18 @@ export async function getAllClients(req: Request, res: Response) {
         return;
     }
 
-    if (type && type === "Buyers") {
-        getBuyers(req, res);
+    if (type) {
+        if (type === "Buyers") {
+            getBuyers(req, res);
+        }
+        else if (type === "References") {
+            getReferences(req, res);
+        }
+        else {
+            res.status(400).json({ message: "Invalid type" });
+        }
         return;
     }
-
-    if(type && type === "References") {
-        getReferences(req, res);
-        return; 
-    }
-
 
     if (search) {
         searchClients(req, res);
