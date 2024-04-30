@@ -31,9 +31,13 @@ export const saleValidator = [
 ]
 
 export async function getAllSales(req: Request, res: Response) {
-    const { agentid } = req.query;
+    const { agentid, unapproved } = req.query;
     if(agentid) {
         getSalesOfAgent(req, res);
+        return;
+    }
+    if (unapproved) {
+        getUnapprovedSales(req, res);
         return;
     }
     const saleRepository = new SaleRepository(db);
@@ -189,6 +193,17 @@ async function getSalesOfAgent(req: Request, res: Response) {
     const salesRepository = new SaleRepository(db);
     try {
         let sales = await salesRepository.getAllOfAgent(idInt);
+        res.status(200).json(sales);
+    }
+    catch(error) {
+        handleException(res, error);
+    }
+}
+
+async function getUnapprovedSales(req: Request, res: Response) {
+    const salesRepository = new SaleRepository(db);
+    try{
+        let sales = await salesRepository.getUnapprovedSales();
         res.status(200).json(sales);
     }
     catch(error) {

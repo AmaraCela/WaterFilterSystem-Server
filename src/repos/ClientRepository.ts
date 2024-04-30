@@ -140,7 +140,6 @@ export class ClientRepository implements Repository<Client> {
             }
         });
         return references;
-        return references.map(ClientMapper.toDomain);
     }
 
 }

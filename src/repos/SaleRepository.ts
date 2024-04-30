@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import { SaleMapper } from "../mappers/SaleMapper";
 import { Sale } from "../models/Sale";
 import { Repository } from "./Repository";
@@ -27,7 +28,6 @@ export class SaleRepository implements Repository<Sale> {
                 model: this.models.Client
             }]
         });
-        console.log(sales);
         return sales;
         // return sales.map(SaleMapper.toDomain);
     }
@@ -79,5 +79,14 @@ export class SaleRepository implements Repository<Sale> {
         });
 
         return SaleMapper.toDomain(saleObj);
+    }
+
+    async getUnapprovedSales() {
+        const sales = await this.models.Sale.findAll({
+            where: {
+                approved: false
+            }
+        });
+        return sales;
     }
 }
