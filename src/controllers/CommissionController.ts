@@ -23,8 +23,20 @@ export const commissionValidator = [
 
 export async function getAllCommissions(req: Request, res: Response) {
     const commissionRepository = new CommissionRepository(db);
+    const { unapproved } = req.query;
+    if(unapproved) {
+        console.log('eyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
+        getUnapprovedComissions(req, res);
+        return;
+    }
     const commissions = await commissionRepository.getAll();
-    res.json(commissions.map(commission => CommissionMapper.toDTO(commission)));
+    res.status(200).json(commissions)
+}
+
+async function getUnapprovedComissions(req: Request, res: Response) {
+    const commissionRepository = new CommissionRepository(db);
+    const commissions = await commissionRepository.getUnapproved();
+    res.status(200).json(commissions)
 }
 
 export async function getCommissionById(req: Request, res: Response) {

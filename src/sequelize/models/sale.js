@@ -10,8 +10,8 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         approved: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
+            type: DataTypes.ENUM("PENDING", "APPROVED", "REJECTED"),
+            defaultValue: "PENDING"
         },
         price: {
             type: DataTypes.INTEGER,

@@ -10,8 +10,31 @@ export class CommissionRepository implements Repository<Commission> {
     }
 
     async getAll(): Promise<Commission[]> {
-        const commissions = await this.models.Commission.findAll();
+        const commissions = await this.models.Commission.findAll({
+            include: [{
+              model: this.models.User,
+              attributes: {
+                exclude: ['passwordHash']
+              }
+            }],
+          });
+        return commissions;
         return commissions.map(CommissionMapper.toDomain);
+    }
+
+    async getUnapproved(): Promise<Commission[]> {
+        const commissions = await this.models.Commission.findAll({
+            where: {
+                approved: false,
+            },
+            include: {
+                model: this.models.User,
+                attributes: {
+                    exlcude: ['passwordHash']
+                }
+            }
+        });
+        return commissions;
     }
 
     async exists(commission: Commission): Promise<boolean> {

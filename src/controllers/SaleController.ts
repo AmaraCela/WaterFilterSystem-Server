@@ -104,6 +104,7 @@ export async function updateSale(req: Request, res: Response) {
     const { clientId, salesAgentId, phoneOperatorId, price, warrantyExpiration, renewalDate, monthlyPayment } = req.body;
     const { id } = req.params;
     const saleRepository = new SaleRepository(db);
+
     const clientRepository = new ClientRepository(db);
     const phoneOperatorRepository = new PhoneOperatorRepository(db);
     const salesAgentRepository = new SalesAgentRepository(db);

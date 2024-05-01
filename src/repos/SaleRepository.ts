@@ -88,7 +88,7 @@ export class SaleRepository implements Repository<Sale> {
             },
             include: [{
                 model: this.models.Client,
-                as: "ReferredClients"
+                as: "ReferredClients",
             }]
         });
 
@@ -98,9 +98,39 @@ export class SaleRepository implements Repository<Sale> {
     async getUnapprovedSales() {
         const sales = await this.models.Sale.findAll({
             where: {
-                approved: false
+                approved: "PENDING"
+            },
+            include: {
+                model: this.models.SalesAgent,
+                include: {
+                    model: this.models.User,
+                }
             }
         });
+        
         return sales;
+    }
+
+
+    async approveSale(sale_id: number) {
+        let sale = this.models.Sale.findOne({
+            where: {
+                sale_id
+            }
+        });
+        console.log(sale);
+        sale = await sale.update(sale.approved = "APPROVED");
+        return sale;
+    }
+
+    async rejectSale(sale_id: number) {
+        let sale = this.models.Sale.findOne({
+            where: {
+                sale_id
+            }
+        });
+        console.log(sale);
+        sale = await sale.update(sale.approved = "REJECTED");
+        return sale;
     }
 }
