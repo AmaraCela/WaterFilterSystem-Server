@@ -141,5 +141,4 @@ export class ClientRepository implements Repository<Client> {
         });
         return references;
     }
-
 }

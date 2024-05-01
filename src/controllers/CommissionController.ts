@@ -25,7 +25,6 @@ export async function getAllCommissions(req: Request, res: Response) {
     const commissionRepository = new CommissionRepository(db);
     const { unapproved } = req.query;
     if(unapproved) {
-        console.log('eyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
         getUnapprovedComissions(req, res);
         return;
     }
