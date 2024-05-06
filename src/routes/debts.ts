@@ -5,7 +5,7 @@ import { getAllDebts, getDebtById, addDebt, updateDebt, deleteDebt, idValidator,
 import { handleInputValidationErrors } from "../controllers/utils/ErrorHandler";
 
 router.get("/", getAllDebts);
-router.post("/:id", debtValidator, handleInputValidationErrors, addDebt);
+router.post("/", debtValidator, handleInputValidationErrors, addDebt);
 router.get("/:id", idValidator, handleInputValidationErrors, getDebtById);
 router.put("/:id", idValidator, debtValidator, handleInputValidationErrors, updateDebt);
 router.delete("/:id", idValidator, handleInputValidationErrors, deleteDebt);
