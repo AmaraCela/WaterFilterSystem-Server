@@ -4,7 +4,7 @@ export interface SaleDTO {
     salesAgent: number,
     phoneOperator: number,
     time: string | null,
-    approved: boolean,
+    approved: "PENDING" | "APPROVED" | "REJECTED",
     price: number,
     warrantyExpiration: string,
     renewalDate: string,

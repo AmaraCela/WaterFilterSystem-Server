@@ -65,12 +65,14 @@ export class SaleRepository implements Repository<Sale> {
     }
 
     async save(sale: Sale): Promise<any> {
+        console.log('inside save');
+        console.log(sale.id);
         let saleObj = await this.models.Sale.findOne({
             where: {
                 sale_id: sale.id
             }
         });
-
+        console.log(saleObj);
         if (saleObj != null) {
             saleObj = await saleObj.update(SaleMapper.toPersistence(sale));
         }
@@ -91,7 +93,7 @@ export class SaleRepository implements Repository<Sale> {
                 as: "ReferredClients",
             }]
         });
-
+       
         return SaleMapper.toDomain(saleObj);
     }
 
@@ -112,24 +114,12 @@ export class SaleRepository implements Repository<Sale> {
     }
 
 
-    async approveSale(sale_id: number) {
-        let sale = this.models.Sale.findOne({
-            where: {
-                sale_id
-            }
-        });
-        console.log(sale);
-        sale = await sale.update(sale.approved = "APPROVED");
-        return sale;
-    }
-
     async rejectSale(sale_id: number) {
         let sale = this.models.Sale.findOne({
             where: {
                 sale_id
             }
         });
-        console.log(sale);
         sale = await sale.update(sale.approved = "REJECTED");
         return sale;
     }

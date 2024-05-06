@@ -6,7 +6,8 @@ export class DebtMapper {
         return {
             nextPayment: debt.nextPayment.toISOString(),
             amountPaidOff: debt.amountPaidOff,
-            amountToCollect: debt.amountToCollect
+            amountToCollect: debt.amountToCollect,
+            sale: debt.sale,
         };
     }
 

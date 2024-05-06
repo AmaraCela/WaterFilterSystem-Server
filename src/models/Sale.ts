@@ -7,14 +7,14 @@ export class Sale {
     salesAgent: number;
     phoneOperator: number;
     time: Date | null;
-    approved: boolean;
+    approved: "PENDING" | "APPROVED" | "REJECTED";
     price: number;
     warrantyExpiration: Date;
     renewalDate: Date;
     monthlyPayment: boolean;
     referredClients: number[];
     
-    constructor(client: number, salesAgent: number, phoneOperator: number, price: number, warrantyExpiration: Date, renewalDate: Date, monthlyPayment: boolean = false, referredClients: number[] = [], time: Date | null = null, approved: boolean = false) {
+    constructor(client: number, salesAgent: number, phoneOperator: number, price: number, warrantyExpiration: Date, renewalDate: Date, monthlyPayment: boolean = false, referredClients: number[] = [], time: Date | null = null, approved: "PENDING" | "APPROVED" | "REJECTED" = "PENDING") {
         this.id = -1;
         this.client = client;
         this.salesAgent = salesAgent;
@@ -30,7 +30,8 @@ export class Sale {
 
     public generateCommissions(salesOfThisMonth: number): Commission[] {
         const commissions: Commission[] = [];
-        if (this.price == 0) {CommissionType
+        if (this.price == 0) {
+            CommissionType
             commissions.push(new Commission(this.salesAgent, CommissionType.REFERRAL, 0.5 * this.referredClients.length));
             return commissions;
         }
@@ -54,7 +55,7 @@ export class Sale {
         }
 
         if (this.price >= 295) {
-            if (this.referredClients.length >= 10) {
+            if (this.referredClients && this.referredClients.length >= 10) {
                 commissions.push(new Commission(this.salesAgent, CommissionType.SPIF, 25));
             }
             else {

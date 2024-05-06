@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 import { deleteDebt, getAllDebts, getDebtById, updateDebt } from "../controllers/DebtController";
-import { addSale, saleValidator, deleteSale, getAllSales, getSaleById, idValidator, updateSale, approveSale } from "../controllers/SaleController";
+import { addSale, saleValidator, deleteSale, getAllSales, getSaleById, idValidator, updateSale, approveSale, rejectSale } from "../controllers/SaleController";
 import { handleInputValidationErrors } from "../controllers/utils/ErrorHandler";
 
 router.get("/", getAllSales);
@@ -18,5 +18,6 @@ router.get("/:id", idValidator, handleInputValidationErrors, getSaleById);
 router.put("/:id", idValidator, saleValidator, handleInputValidationErrors, updateSale);
 router.delete("/:id", idValidator, handleInputValidationErrors, deleteSale);
 router.post("/:id/approval", idValidator, handleInputValidationErrors, approveSale);
+router.post("/:id/rejection", idValidator, handleInputValidationErrors, rejectSale);
 
 module.exports = router;

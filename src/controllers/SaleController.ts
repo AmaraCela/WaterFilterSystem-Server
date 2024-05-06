@@ -34,7 +34,7 @@ export const saleValidator = [
 
 export async function getAllSales(req: Request, res: Response) {
     const { agentid, unapproved } = req.query;
-    if(agentid) {
+    if (agentid) {
         getSalesOfAgent(req, res);
         return;
     }
@@ -91,7 +91,7 @@ export async function addSale(req: Request, res: Response) {
             return;
         }
 
-        let sale = new Sale(clientId, salesAgentId, phoneOperatorId, price, new Date(warrantyExpiration), new Date(renewalDate), monthlyPayment, [], time, false);
+        let sale = new Sale(clientId, salesAgentId, phoneOperatorId, price, new Date(warrantyExpiration), new Date(renewalDate), monthlyPayment, [], time, "PENDING");
         sale = await saleRepository.save(sale);
         res.status(201).json(SaleMapper.toDTO(sale));
     } catch (error) {
@@ -116,7 +116,7 @@ export async function updateSale(req: Request, res: Response) {
             res.status(404).json({ message: "Sale not found" });
             return;
         }
-        
+
         const client = await clientRepository.findClientById(clientId);
         if (!client) {
             res.status(400).json({ message: "Client not found" });
@@ -158,8 +158,8 @@ export async function approveSale(req: Request, res: Response) {
             res.status(404).json({ message: "Sale not found" });
             return;
         }
-        
-        sale.approved = true;
+
+        sale.approved = 'APPROVED';
         await saleRepository.save(sale);
 
         const salesOfThisMonth = await saleRepository.getOfThisMonth();
@@ -170,6 +170,24 @@ export async function approveSale(req: Request, res: Response) {
         }
 
         res.json(SaleMapper.toDTO(sale));
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+}
+
+export async function rejectSale(req: Request, res: Response) {
+    const { id } = req.params;
+    const saleRepository = new SaleRepository(db);
+    const idInt = parseInt(id);
+
+    try {
+        const sale = await saleRepository.findSaleById(idInt);
+        if (sale) {
+            sale.approved = 'REJECTED';
+            saleRepository.save(sale);
+        }
+        res.status(200).json(sale);
     }
     catch (error) {
         handleException(res, error);
@@ -206,18 +224,18 @@ async function getSalesOfAgent(req: Request, res: Response) {
         let sales = await salesRepository.getAllOfAgent(idInt);
         res.status(200).json(sales);
     }
-    catch(error) {
+    catch (error) {
         handleException(res, error);
     }
 }
 
 async function getUnapprovedSales(req: Request, res: Response) {
     const salesRepository = new SaleRepository(db);
-    try{
+    try {
         let sales = await salesRepository.getUnapprovedSales();
         res.status(200).json(sales);
     }
-    catch(error) {
+    catch (error) {
         handleException(res, error);
     }
 }
