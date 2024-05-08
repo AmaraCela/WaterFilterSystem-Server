@@ -113,18 +113,38 @@ export class ClientRepository implements Repository<Client> {
     }
 
     async findClientsByName(name: string): Promise<Client[]> {
-        const clients = await this.models.Client.findAll({
-            where: {
-                [Op.or]: [
-                    { name: { [Op.like]: `%${name}%` } },
-                    { surname: { [Op.like]: `%${name}%` } }
-                ]
-            },
-            include: [{
-                model: this.models.Client,
-                as: "Referrals"
-            }]
-        });
+        let clients;
+        if (name.includes(' ')) {
+            const fname = name.split(' ')[0];
+            const surname = name.split(' ')[1];
+            clients = await this.models.Client.findAll({
+                where: {
+                    [Op.and]: [
+                        { name: { [Op.like]: `%${fname}%` } },
+                        { surname: { [Op.like]: `%${surname}%` } }
+                    ]
+                },
+                include: [{
+                    model: this.models.Client,
+                    as: "Referrals"
+                }]
+            });
+        }
+        else {
+            clients = await this.models.Client.findAll({
+                where: {
+                    [Op.or]: [
+                        { name: { [Op.like]: `%${name}%` } },
+                        { surname: { [Op.like]: `%${name}%` } }
+                    ]
+                },
+                include: [{
+                    model: this.models.Client,
+                    as: "Referrals"
+                }]
+            });
+        }
+
         return clients.map(ClientMapper.toDomain);
     }
 
@@ -141,4 +161,5 @@ export class ClientRepository implements Repository<Client> {
         });
         return references;
     }
+
 }

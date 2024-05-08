@@ -223,3 +223,7 @@ async function searchClients(req: Request, res: Response) {
         handleException(res, error);
     }
 }
+
+export async function getClientByName() {
+    
+}
