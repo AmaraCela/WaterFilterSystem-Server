@@ -41,3 +41,8 @@ export async function createSession(req: Request, res: Response) {
         handleException(res, error);
     }
 }
+
+export async function deleteSession(req: Request, res: Response) {
+    res.clearCookie('session');
+    res.json({ message: "Logged out" });
+}

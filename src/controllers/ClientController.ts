@@ -169,6 +169,27 @@ export async function updateClient(req: Request, res: Response) {
     }
 }
 
+export async function removeFromRedlist(req: Request, res: Response) {
+    const clientRepository = new ClientRepository(db);
+    const { id } = req.params;
+    const idInt = parseInt(id);
+
+    try {
+        let client = await clientRepository.findClientById(idInt);
+        if (!client) {
+            res.status(404).json({ message: "Client not found" });
+            return;
+        }
+
+        client.status = ClientStatus.IN_WAITLIST;
+        clientRepository.save(client);
+        res.json(ClientMapper.toDTO(client));
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+
+}
 export async function deleteClient(req: Request, res: Response) {
     const clientRepository = new ClientRepository(db);
     const { id } = req.params;

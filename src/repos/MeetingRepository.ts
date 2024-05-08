@@ -23,7 +23,15 @@ export class MeetingRepository {
         return meetings;
     }
 
-    async save(meeting: Meeting){
+    async findMeetingById(id: number): Promise<Meeting> {
+        return await this.models.Meeting.findOne({
+            where: {
+                meeting_id: id
+            }
+        });
+    }
+
+    async save(meeting: Meeting) {
         let meetingg = await this.models.Meeting.findOne({
             where: {
                 meeting_id: meeting.id

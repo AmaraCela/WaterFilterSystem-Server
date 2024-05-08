@@ -1,14 +1,10 @@
 import { Request, Response } from "express";
-import { CallRepository } from "../repos/CallRepository";
-import { UserRepository } from "../repos/UserRepository";
-import { Call } from "../models/Call";
 
 import db from "../sequelize/models";
 
 import { handleException } from "./utils/ErrorHandler";
 import { ScheduleMapper } from "../mappers/ScheduleMapper";
 import { AgentScheduleRepository } from "../repos/AgentScheduleRepository";
-import { UserRole } from "../enums/UserRole";
 import { SalesAgentRepository } from "../repos/SalesAgentRepository";
 import { AgentSchedule } from "../models/AgentSchedule";
 
@@ -32,11 +28,11 @@ export async function getAllSchedules(req: Request, res: Response) {
 export async function getSchedulesOfAgent(req: Request, res: Response) {
     const { id } = req.params;
     const agentScheduleRepository = new AgentScheduleRepository(db);
-    const salesAgentRepository = new UserRepository(db);
+    const salesAgentRepository = new SalesAgentRepository(db);
 
     const idInt = parseInt(id);
     try {
-        const user = await salesAgentRepository.findUserById(idInt);
+        const user = await salesAgentRepository.findAgentById(idInt);
         if (!user) {
             res.status(404).json({ message: "Sales agent not found" });
             return;

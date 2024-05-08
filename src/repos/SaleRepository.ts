@@ -65,14 +65,12 @@ export class SaleRepository implements Repository<Sale> {
     }
 
     async save(sale: Sale): Promise<any> {
-        console.log('inside save');
-        console.log(sale.id);
         let saleObj = await this.models.Sale.findOne({
             where: {
                 sale_id: sale.id
             }
         });
-        console.log(saleObj);
+
         if (saleObj != null) {
             saleObj = await saleObj.update(SaleMapper.toPersistence(sale));
         }
