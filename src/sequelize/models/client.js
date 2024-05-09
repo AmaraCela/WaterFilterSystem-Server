@@ -13,7 +13,8 @@ module.exports = function(sequelize, DataTypes) {
         },
         phoneNo: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true,
         },
         address: {
             type: DataTypes.STRING
@@ -34,6 +35,9 @@ module.exports = function(sequelize, DataTypes) {
         status: {
             type: DataTypes.ENUM("IN_WAITLIST", "IN_REDLIST"),
             defaultValue: "IN_WAITLIST"
+        },
+        financiallyQualified: {
+            type: DataTypes.BOOLEAN
         }
     });
 
