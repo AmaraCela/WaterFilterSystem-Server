@@ -13,7 +13,8 @@ module.exports = function(sequelize, DataTypes) {
         },
         phoneNo: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true,
         },
         address: {
             type: DataTypes.STRING
@@ -34,6 +35,9 @@ module.exports = function(sequelize, DataTypes) {
         status: {
             type: DataTypes.ENUM("IN_WAITLIST", "IN_REDLIST"),
             defaultValue: "IN_WAITLIST"
+        },
+        financiallyQualified: {
+            type: DataTypes.BOOLEAN
         }
     });
 
@@ -43,7 +47,8 @@ module.exports = function(sequelize, DataTypes) {
         });
     
         Client.belongsTo(models.Client, {
-            foreignKey: "referredBy"
+            foreignKey: "referredBy",
+            as: "ReferredBy"
         });
 
         Client.belongsTo(models.Sale, {
@@ -51,19 +56,23 @@ module.exports = function(sequelize, DataTypes) {
         });
 
         Client.hasMany(models.Client, {
-            foreignKey: "referredBy"
+            foreignKey: "referredBy",
+            as: "Referrals"
         });
 
         Client.hasMany(models.Call, {
-            foreignKey: "client"
+            foreignKey: "client",
+            onDelete: "CASCADE"
         });
 
         Client.hasMany(models.Meeting, {
-            foreignKey: "client"
+            foreignKey: "client",
+            onDelete: "CASCADE"
         });
 
         Client.hasOne(models.Sale, {
-            foreignKey: "client"
+            foreignKey: "client",
+            onDelete: "CASCADE"
         });
     }
 

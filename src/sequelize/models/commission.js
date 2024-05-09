@@ -5,8 +5,16 @@ module.exports = function(sequelize, DataTypes) {
             primaryKey: true,
             autoIncrement: true
         },
+        amount: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
         approved: {
             type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        type: {
+            type: DataTypes.ENUM("REFERRAL", "SPIF", "TIERED"),
             allowNull: false
         }
     });
