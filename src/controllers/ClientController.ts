@@ -47,7 +47,7 @@ export async function getBuyers(req: Request, res: Response) {
     const clientRepository = new ClientRepository(db);
     try {
         const buyers = await clientRepository.findBuyers();
-        res.status(200).json(buyers);
+        res.status(200).json(buyers.map(ClientMapper.toDTO));
     }
     catch (error) {
         handleException(res, error);
@@ -59,7 +59,7 @@ export async function getReferences(req: Request, res: Response) {
     const clientRepository = new ClientRepository(db);
     try {
         const references = await clientRepository.findReferences();
-        res.status(200).json(references);
+        res.status(200).json(references.map(ClientMapper.toDTO));
     }
     catch (error) {
         handleException(res, error);
@@ -147,7 +147,7 @@ export async function addClient(req: Request, res: Response) {
 export async function updateClient(req: Request, res: Response) {
     const clientRepository = new ClientRepository(db);
     const { id } = req.params;
-    const { name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, referrals, status, referredBy, assigenedOperator, referredInSale } = req.body;
+    const { name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, referrals, status, referredBy, assignedOperator, referredInSale } = req.body;
     const idInt = parseInt(id);
 
     try {
@@ -157,7 +157,7 @@ export async function updateClient(req: Request, res: Response) {
             return;
         }
 
-        client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, referrals, ClientStatus[<string>status as keyof typeof ClientStatus], referredBy, assigenedOperator, referredInSale);
+        client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, referrals, ClientStatus[<string>status as keyof typeof ClientStatus], referredBy, assignedOperator, referredInSale);
         client.id = idInt;
 
         clientRepository.save(client);

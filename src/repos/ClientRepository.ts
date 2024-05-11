@@ -151,7 +151,11 @@ export class ClientRepository implements Repository<Client> {
     async findReferences() {
         const references = await this.models.Client.findAll({
             where: {
-                referredBy: { [Op.ne]: null }
+                [Op.and] : [
+                    { hasMadePurchase: 0 },
+                    { status: "IN_WAITLIST" },
+                    { assignedOperator: null}
+                ]
             },
             include: {
                 model: this.models.Client,
@@ -159,6 +163,7 @@ export class ClientRepository implements Repository<Client> {
                 attributes: [['client_id', 'id'], 'name', 'surname']
             }
         });
+        return references.map(ClientMapper.toDomain);
         return references;
     }
 
