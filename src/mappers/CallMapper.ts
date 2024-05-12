@@ -9,7 +9,9 @@ export class CallMapper {
             phoneOperatorId: call.phoneOperator,
             scheduledTime: call.scheduledTime.toISOString(),
             outcomeComment: call.outcomeComment,
-            completed: call.completed
+            completed: call.completed,
+            clientFullName: call.clientFullName ? call.clientFullName : undefined,
+            clientNumber: call.clientNumber ? call.clientNumber : undefined
         };
     }
 
@@ -30,6 +32,8 @@ export class CallMapper {
 
         const callModel = new Call(call.client, call.phoneOperator, new Date(call.scheduledTime), call.outcomeComment, call.completed);
         callModel.id = call.call_id;
+        callModel.clientFullName = call.Client ? call.Client.name + " " + call.Client.surname : null;
+        callModel.clientNumber = call.Client ? call.Client.phoneNo : null;
 
         return callModel;
     }

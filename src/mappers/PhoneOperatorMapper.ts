@@ -30,8 +30,8 @@ export class PhoneOperatorMapper {
 
         const operator = new PhoneOperator(user.User.name, user.User.surname, user.User.email, user.User.passwordHash);
         operator.id = user.operator_id;
-        operator.calls = user.Calls.map((call: any) => call.call_id).filter((call: any) => !call.completed);
-        operator.callHistory = user.Calls.map((call: any) => call.call_id).filter((call: any) => call.completed);
+        operator.calls = user.Calls.filter((call: any) => !call.completed).map((call: any) => call.call_id);
+        operator.callHistory = user.Calls.filter((call: any) => call.completed).map((call: any) => call.call_id);
 
         return operator;
     }

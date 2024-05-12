@@ -4,5 +4,7 @@ export interface CallDTO {
     phoneOperatorId: number,
     scheduledTime: string,
     outcomeComment: string,
-    completed: boolean
+    completed: boolean,
+    clientFullName: string | undefined,
+    clientNumber: string | undefined
 }

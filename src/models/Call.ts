@@ -5,11 +5,13 @@ export class Call {
     scheduledTime: Date;
     outcomeComment: string;
     completed: boolean;
+    clientFullName: string | null = null;
+    clientNumber: string | null = null;
 
     constructor (client: number, phoneOperator: number, scheduledTime: Date, outcomeComment: string = "", completed: boolean = false) {
         const now = new Date();
         if (!completed && scheduledTime < now) {
-            throw new Error("Can't schedule call in the past");
+            scheduledTime = now;
         }
 
         this.id = -1;
@@ -19,5 +21,4 @@ export class Call {
         this.outcomeComment = outcomeComment;
         this.completed = completed;
     }
-
 }
