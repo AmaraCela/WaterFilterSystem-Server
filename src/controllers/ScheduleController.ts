@@ -18,7 +18,7 @@ export async function getAllSchedules(req: Request, res: Response) {
     const agentScheduleRepository = new AgentScheduleRepository(db);
     try {
         const schedules = await agentScheduleRepository.getAll();
-        res.json(schedules.map(ScheduleMapper.toDTO));
+        res.json(schedules.map(ScheduleMapper.toDTOAll));
     }
     catch (error) {
         handleException(res, error);
