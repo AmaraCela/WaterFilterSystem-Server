@@ -10,6 +10,10 @@ module.exports = function(sequelize, DataTypes) {
         },
         outcomeComment: {
             type: DataTypes.STRING
+        },
+        completed: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     });
 

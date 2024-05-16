@@ -10,7 +10,14 @@ export class CallRepository implements Repository<Call> {
     }
 
     async getAll(): Promise<Call[]> {
-        const calls = await this.models.Call.findAll();
+        const calls = await this.models.Call.findAll({
+            include: [
+                {
+                    model: this.models.Client,
+                    as: "Client"
+                }
+            ]
+        });
         return calls.map(CallMapper.toDomain);
     }
 
@@ -53,7 +60,13 @@ export class CallRepository implements Repository<Call> {
         const callObj = await this.models.Call.findOne({
             where: {
                 call_id: id
-            }
+            },
+            include: [
+                {
+                    model: this.models.Client,
+                    as: "Client"
+                }
+            ]
         });
 
         return CallMapper.toDomain(callObj);

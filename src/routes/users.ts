@@ -25,6 +25,7 @@ router.post("/chiefofoperations", userValidator, handleInputValidationErrors, ad
 router.get("/chiefofoperations/:id", idValidator, handleInputValidationErrors, getChiefOfOperationsById);
 router.put("/chiefofoperations/:id", idValidator, userValidator, handleInputValidationErrors, updateChiefOfOperations);
 
+router.get("/salesagents/schedules", getAllSchedules);
 router.get("/salesagents/:id/schedules", idValidator, handleInputValidationErrors, getSchedulesOfAgent);
 router.post("/salesagents/:id/schedules", idValidator, handleInputValidationErrors, addScheduleToAgent);
 router.put("/salesagents/:id/schedules/:scheduleId", idValidator, scheduleIdValidator, handleInputValidationErrors, updateSchedule);
