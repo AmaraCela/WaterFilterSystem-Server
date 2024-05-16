@@ -5,6 +5,7 @@ import { handleException } from "./utils/ErrorHandler";
 import { Client } from "../models/Client";
 import { ClientMapper } from "../mappers/ClientMapper";
 import { ClientStatus } from "../enums/ClientStatus";
+import { PhoneOperatorRepository } from "../repos/PhoneOperatorRepository";
 
 const { param, body } = require('express-validator');
 export const idValidator = [
@@ -146,6 +147,7 @@ export async function addClient(req: Request, res: Response) {
 
 export async function updateClient(req: Request, res: Response) {
     const clientRepository = new ClientRepository(db);
+    const operatorRepository = new PhoneOperatorRepository(db);
     const { id } = req.params;
     const { name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, referrals, status, referredBy, assignedOperator, referredInSale } = req.body;
     const idInt = parseInt(id);
@@ -155,8 +157,14 @@ export async function updateClient(req: Request, res: Response) {
         if (!client) {
             res.status(404).json({ message: "Client not found" });
             return;
-        }
+        }       
 
+        let operator = operatorRepository.findOperatorById(assignedOperator);
+        if (!operator) {
+            res.status(404).json({message: "Operator not found"});
+            return;
+        }
+        
         client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, referrals, ClientStatus[<string>status as keyof typeof ClientStatus], referredBy, assignedOperator, referredInSale);
         client.id = idInt;
 
