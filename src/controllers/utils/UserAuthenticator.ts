@@ -4,6 +4,7 @@ import { User } from "../../models/User";
 import { UserRepository } from "../../repos/UserRepository";
 import db from "../../sequelize/models";
 import { UserRole } from "../../enums/UserRole";
+import { handleException } from "./ErrorHandler";
 
 async function getUser(req: Request) {
     let token = req.get("Authorization");
@@ -11,7 +12,7 @@ async function getUser(req: Request) {
         if (!req.cookies) {
             return null;
         }
-        
+
         token = req.cookies["token"];
         
         if (!token) {
@@ -30,6 +31,41 @@ async function getUser(req: Request) {
     }
     catch (error) {
         return null;
+    }
+}
+
+export async function requireSelf(req: Request, res: Response, next: any) {
+    const userRepository = new UserRepository(db);
+    const { id } = req.params;
+    const idInt = parseInt(id);
+
+    try {
+        const self = await getUser(req);
+        if (!self) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+
+        if (self.role === UserRole.ADMINISTRATOR) {
+            next();
+            return;
+        }
+
+        const user = await userRepository.findUserById(idInt);
+        if (!user) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+
+        if (user.id != self.id) {
+            res.status(403).json({ message: "Forbidden" });
+            return;
+        }
+
+        next();
+    }
+    catch (error) {
+        handleException(res, error);
     }
 }
 
@@ -68,6 +104,26 @@ export async function requireChiefOfOperations(req: Request, res: Response, next
     next();
 }
 
+export async function requireMarketingManager(req: Request, res: Response, next: any) {
+    const user = await getUser(req);
+    if (!user) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+
+    if (user.role == UserRole.ADMINISTRATOR) {
+        next();
+        return;
+    }
+
+    if (user.role !== UserRole.MARKETING_MANAGER) {
+        res.status(403).json({ message: "Forbidden" });
+        return;
+    }
+
+    next();
+}
+
 export async function requirePhoneOperator(req: Request, res: Response, next: any) {
     const user = await getUser(req);
     if (!user) {
@@ -96,7 +152,7 @@ export async function requireSalesAgent(req: Request, res: Response, next: any) 
         return;
     }
 
-    if (user.role == UserRole.ADMINISTRATOR) {
+    if (user.role == UserRole.ADMINISTRATOR || user.role == UserRole.MARKETING_MANAGER || user.role == UserRole.CHIEF_OF_OPERATIONS) {
         next();
         return;
     }
@@ -108,19 +164,3 @@ export async function requireSalesAgent(req: Request, res: Response, next: any) 
 
     next();
 }
-
-// export async function filterCallsForPhoneOperator(req: Request, res: Response, next: any) {
-//     // const user = await getUser(req);
-//     // if (!user) {
-//     //     res.status(401).json({ message: "Unauthorized" });
-//     //     return;
-//     // }
-
-//     // if (user.role == UserRole.ADMINISTRATOR) {
-//     //     next();
-//     //     return;
-//     // }
-
-//     console.log("LOGGING ", req, res);
-//     next();
-// }
