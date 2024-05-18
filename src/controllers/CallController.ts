@@ -91,12 +91,14 @@ export async function addCall(req: Request, res: Response) {
 
     try {
         const client = await clientRepository.findClientById(clientId);
+
         if (!client) {
             res.status(400).json({ message: "Client not found" });
             return;
         }
 
         const phoneOperator = await phoneOperatorRepository.findOperatorById(phoneOperatorId);
+        console.log(phoneOperator);
         if (!phoneOperator) {
             res.status(400).json({ message: "Phone operator not found" });
             return;
