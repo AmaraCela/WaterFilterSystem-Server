@@ -8,6 +8,10 @@ import { UserRole } from "../../enums/UserRole";
 async function getUser(req: Request) {
     let token = req.get("Authorization");
     if (!token) {
+        if (!req.cookies) {
+            return null;
+        }
+        
         token = req.cookies["token"];
         
         if (!token) {
@@ -71,7 +75,8 @@ export async function requirePhoneOperator(req: Request, res: Response, next: an
         return;
     }
 
-    if (user.role == UserRole.ADMINISTRATOR) {
+    (<any>req).user = user;
+    if (user.role == UserRole.ADMINISTRATOR || user.role == UserRole.MARKETING_MANAGER || user.role == UserRole.CHIEF_OF_OPERATIONS) {
         next();
         return;
     }
@@ -103,3 +108,19 @@ export async function requireSalesAgent(req: Request, res: Response, next: any) 
 
     next();
 }
+
+// export async function filterCallsForPhoneOperator(req: Request, res: Response, next: any) {
+//     // const user = await getUser(req);
+//     // if (!user) {
+//     //     res.status(401).json({ message: "Unauthorized" });
+//     //     return;
+//     // }
+
+//     // if (user.role == UserRole.ADMINISTRATOR) {
+//     //     next();
+//     //     return;
+//     // }
+
+//     console.log("LOGGING ", req, res);
+//     next();
+// }

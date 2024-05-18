@@ -30,6 +30,28 @@ export async function getAllCalls(req: Request, res: Response) {
     res.json(calls.map(call => CallMapper.toDTO(call)));
 }
 
+export async function filterAllowedCallsForPhoneOperator(req: Request, res: Response, next: any) {
+    const user = (<any>req).user as PhoneOperator ?? null;
+    if (!user) {
+        (<any>req).allowedCalls = [];
+        (<any>req).redactedCalls = [];
+        
+        next();
+        return;
+    }
+
+    const callRepository = new CallRepository(db);
+    const calls = await callRepository.getAll();
+
+    const allowedCalls = calls.filter(call => call.phoneOperator === user.id && !call.completed);
+    const redactedCalls = calls.filter(call => call.phoneOperator === user.id && call.completed);
+
+    (<any>req).allowedCalls = allowedCalls;
+    (<any>req).redactedCalls = redactedCalls;
+
+    next();
+}
+
 export async function getCallById(req: Request, res: Response) {
     const { id } = req.params;
     const callRepository = new CallRepository(db);
@@ -41,6 +63,19 @@ export async function getCallById(req: Request, res: Response) {
             res.status(404).json({ message: "Call not found" });
             return;
         }
+
+        const allowed = (<any>req).allowedCalls.find((c: any) => c.id === call.id);
+        if (!allowed) {
+            const redacted = (<any>req).redactedCalls.find((c: any) => c.id === call.id);
+            if (!redacted) {
+                res.status(403).json({ message: "Forbidden" });
+                return;
+            }
+
+            res.json(CallMapper.toDTORedacted(call));
+            return;
+        }
+
         res.json(CallMapper.toDTO(call));
     }
     catch (error) {

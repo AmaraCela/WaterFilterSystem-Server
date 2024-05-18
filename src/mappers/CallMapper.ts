@@ -1,5 +1,6 @@
 import { Call } from '../models/Call';
 import { CallDTO } from '../dtos/CallDTO';
+import { CallDTORedacted } from '../dtos/CallDTORedacted';
 
 export class CallMapper {
     public static toDTO(call: Call): CallDTO {
@@ -12,6 +13,18 @@ export class CallMapper {
             completed: call.completed,
             clientFullName: call.clientFullName ? call.clientFullName : undefined,
             clientNumber: call.clientNumber ? call.clientNumber : undefined
+        };
+    }
+
+    public static toDTORedacted(call: Call): CallDTORedacted {
+        return {
+            id: call.id,
+            clientId: call.client,
+            phoneOperatorId: call.phoneOperator,
+            scheduledTime: call.scheduledTime.toISOString(),
+            outcomeComment: call.outcomeComment,
+            completed: call.completed,
+            clientFullName: call.clientFullName ? call.clientFullName : undefined,
         };
     }
 
