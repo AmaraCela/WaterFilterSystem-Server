@@ -34,7 +34,17 @@ async function getUser(req: Request) {
     }
 }
 
+function skipAuth() {
+    // return false; // uncomment if you want to test authentication
+    return process.env.NODE_ENV === 'development';
+}
+
 export async function requireSelf(req: Request, res: Response, next: any) {
+    if (skipAuth()) {
+        next();
+        return;
+    }
+
     const userRepository = new UserRepository(db);
     const { id } = req.params;
     const idInt = parseInt(id);
@@ -70,6 +80,11 @@ export async function requireSelf(req: Request, res: Response, next: any) {
 }
 
 export async function requireAdmin(req: Request, res: Response, next: any) {
+    if (skipAuth()) {
+        next();
+        return;
+    }
+    
     const user = await getUser(req);
     if (!user) {
         res.status(401).json({ message: "Unauthorized" });
@@ -85,6 +100,11 @@ export async function requireAdmin(req: Request, res: Response, next: any) {
 }
 
 export async function requireChiefOfOperations(req: Request, res: Response, next: any) {
+    if (skipAuth()) {
+        next();
+        return;
+    }
+    
     const user = await getUser(req);
     if (!user) {
         res.status(401).json({ message: "Unauthorized" });
@@ -105,6 +125,11 @@ export async function requireChiefOfOperations(req: Request, res: Response, next
 }
 
 export async function requireMarketingManager(req: Request, res: Response, next: any) {
+    if (skipAuth()) {
+        next();
+        return;
+    }
+    
     const user = await getUser(req);
     if (!user) {
         res.status(401).json({ message: "Unauthorized" });
@@ -125,6 +150,11 @@ export async function requireMarketingManager(req: Request, res: Response, next:
 }
 
 export async function requirePhoneOperator(req: Request, res: Response, next: any) {
+    if (skipAuth()) {
+        next();
+        return;
+    }
+    
     const user = await getUser(req);
     if (!user) {
         res.status(401).json({ message: "Unauthorized" });
@@ -146,6 +176,11 @@ export async function requirePhoneOperator(req: Request, res: Response, next: an
 }
 
 export async function requireSalesAgent(req: Request, res: Response, next: any) {
+    if (skipAuth()) {
+        next();
+        return;
+    }
+    
     const user = await getUser(req);
     if (!user) {
         res.status(401).json({ message: "Unauthorized" });
