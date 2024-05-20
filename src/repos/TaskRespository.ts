@@ -43,7 +43,7 @@ export class TaskRepository implements Repository<Task> {
             taskObj = await taskObj.update(TaskMapper.toPersistance(t));
         }
         else {
-            taskObj = await this.models.create(TaskMapper.toPersistance(t));
+            taskObj = await this.models.Task.create(TaskMapper.toPersistance(t));
         }
 
         return TaskMapper.toDomain(taskObj);
