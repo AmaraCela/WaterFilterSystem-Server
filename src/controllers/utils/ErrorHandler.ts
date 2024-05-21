@@ -30,6 +30,7 @@ export function handleException(res: Response, error: any) {
 export function handleInputValidationErrors(req: Request, res: Response, next: any) {
     const { validationResult } = require('express-validator');
     const error = validationResult(req);
+
     if (!error.isEmpty()) {
         let errors: any = {};
 

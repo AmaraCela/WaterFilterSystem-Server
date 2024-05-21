@@ -6,6 +6,8 @@ import { Client } from "../models/Client";
 import { ClientMapper } from "../mappers/ClientMapper";
 import { ClientStatus } from "../enums/ClientStatus";
 import { PhoneOperatorRepository } from "../repos/PhoneOperatorRepository";
+import { CallRepository } from "../repos/CallRepository";
+import { Call } from "../models/Call";
 
 const { param, body } = require('express-validator');
 export const idValidator = [
@@ -65,9 +67,19 @@ export async function getReferences(req: Request, res: Response) {
     catch (error) {
         handleException(res, error);
     }
-
 }
 
+export async function getLatestReferences(req: Request, res: Response) {
+    const clientRepository = new ClientRepository(db);
+    try {
+        let references = await clientRepository.findReferences();
+        references = references.filter((reference) => reference.nextContactDate === null);
+        res.status(200).json(references.map(ClientMapper.toDTO));
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+}
 
 export async function getAllClients(req: Request, res: Response) {
     const { status, type, search } = req.query;
@@ -82,6 +94,9 @@ export async function getAllClients(req: Request, res: Response) {
         }
         else if (type === "References") {
             getReferences(req, res);
+        }
+        else if (type === "LatestReferences") {
+            getLatestReferences(req, res);
         }
         else {
             res.status(400).json({ message: "Invalid type" });
@@ -127,7 +142,7 @@ export async function addClient(req: Request, res: Response) {
     const { name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, status, assigenedOperator, referredBy, referredInSale } = req.body;
 
     try {
-        let referredByClientId: number|null = null;
+        let referredByClientId: number | null = null;
         if (referredBy) {
             const referredByClient = await clientRepository.findClientById(referredBy);
             if (!referredByClient) {
@@ -138,6 +153,8 @@ export async function addClient(req: Request, res: Response) {
         }
         let client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, [], status, referredByClientId, assigenedOperator, referredInSale);
         client = await clientRepository.save(client);
+
+
         res.status(201).json(ClientMapper.toDTO(client));
     }
     catch (error) {
@@ -151,20 +168,21 @@ export async function updateClient(req: Request, res: Response) {
     const { id } = req.params;
     const { name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, referrals, status, referredBy, assignedOperator, referredInSale } = req.body;
     const idInt = parseInt(id);
-
     try {
         let client = await clientRepository.findClientById(idInt);
         if (!client) {
             res.status(404).json({ message: "Client not found" });
             return;
-        }       
-
-        let operator = operatorRepository.findOperatorById(assignedOperator);
-        if (!operator) {
-            res.status(404).json({message: "Operator not found"});
-            return;
         }
-        
+
+        if (assignedOperator) {
+            let operator = operatorRepository.findOperatorById(assignedOperator);
+            if (!operator) {
+                res.status(404).json({ message: "Operator not found" });
+                return;
+            }
+        }
+
         client = new Client(name, surname, phoneNo, address, profession, hasMadePurchase, lastCallDate, nextContactDate, referrals, ClientStatus[<string>status as keyof typeof ClientStatus], referredBy, assignedOperator, referredInSale);
         client.id = idInt;
 
@@ -254,5 +272,5 @@ async function searchClients(req: Request, res: Response) {
 }
 
 export async function getClientByName() {
-    
+
 }

@@ -148,13 +148,13 @@ export class ClientRepository implements Repository<Client> {
         return clients.map(ClientMapper.toDomain);
     }
 
-    async findReferences() {
+    async findReferences(): Promise<Client[]> {
         const references = await this.models.Client.findAll({
             where: {
-                [Op.and] : [
+                [Op.and]: [
                     { hasMadePurchase: 0 },
                     { status: "IN_WAITLIST" },
-                    { assignedOperator: null}
+                    { assignedOperator: null }
                 ]
             },
             include: {

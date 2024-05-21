@@ -35,7 +35,7 @@ export async function filterAllowedCallsForPhoneOperator(req: Request, res: Resp
     if (!user) {
         (<any>req).allowedCalls = [];
         (<any>req).redactedCalls = [];
-        
+
         next();
         return;
     }
@@ -50,6 +50,41 @@ export async function filterAllowedCallsForPhoneOperator(req: Request, res: Resp
     (<any>req).redactedCalls = redactedCalls;
 
     next();
+}
+
+export async function getReservedCalls(req: Request, res: Response) {
+    const dateObj = new Date();
+    const date = dateObj.getDate();
+    const month = dateObj.getMonth();
+    const year = dateObj.getFullYear();
+
+    const { id } = req.params;
+    try {
+        const callRepository = new CallRepository(db);
+        let calls = await callRepository.getAll();
+        if (id) {
+            calls = calls.filter(call => {
+                const callDate = new Date(call.scheduledTime);
+                return call.phoneOperator === parseInt(id) && callDate.getDate() === date && callDate.getMonth() === month && callDate.getFullYear() === year
+            });
+            return res.status(200).json(calls.map(CallMapper.toDTO));
+        }
+    }
+    catch (error) {
+        handleException(res, error);
+    }
+}
+
+export async function getLatestReferences(req: Request, res: Response) {
+    const callRepository = new CallRepository(db);
+    try {
+        let calls = await callRepository.getAll();
+        calls = calls.filter(call => call.completed === false && call.scheduledTime === null);
+        return res.status(200).json(calls.map(CallMapper.toDTO));
+    }
+    catch (error) {
+        handleException(res, error)
+    }
 }
 
 export async function getCallById(req: Request, res: Response) {
@@ -137,7 +172,7 @@ export async function updateCall(req: Request, res: Response) {
             res.status(404).json({ message: "Call not found" });
             return;
         }
-        
+
         call = new Call(clientId, phoneOperatorId, new Date(scheduledTime), outcomeComment, completed);
         call.id = idInt;
 
