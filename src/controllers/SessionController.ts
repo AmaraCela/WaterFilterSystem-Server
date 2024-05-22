@@ -34,7 +34,7 @@ export async function createSession(req: Request, res: Response) {
         }
         
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "30d" });
-        res.cookie('session', token, { httpOnly: true });
+        res.cookie('session', token, { httpOnly: true, secure: false });
         res.json({ token, user_id: user.id });
     }
     catch (error) {
