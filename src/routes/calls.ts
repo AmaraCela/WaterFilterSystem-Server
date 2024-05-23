@@ -7,7 +7,7 @@ import { requireMarketingManager, requirePhoneOperator } from "../controllers/ut
 // import { filterCallsForPhoneOperator } from "../controllers/utils/UserAuthenticator";
 
 router.get("/:id/reserved", getReservedCalls);
-router.get("/latest", getLatestReferences);
+router.get("/latest", requirePhoneOperator, getLatestReferences);
 router.get("/", requireMarketingManager, getAllCalls);
 router.post("/", callValidator, handleInputValidationErrors, requireMarketingManager, addCall);
 router.get("/:id", idValidator, handleInputValidationErrors, requirePhoneOperator, filterAllowedCallsForPhoneOperator, getCallById);

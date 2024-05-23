@@ -10,14 +10,15 @@ export class AgentScheduleRepository implements Repository<AgentSchedule> {
     }
 
     private async deleteOldSchedules() {
-        const lastMonday = new Date();
-        lastMonday.setDate(lastMonday.getDate() - ((lastMonday.getDay() + 6) % 7));
-        lastMonday.setHours(0, 0, 0, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        // lastMonday.setDate(lastMonday.getDate() - ((lastMonday.getDay() + 6) % 7));
+        // lastMonday.setHours(0, 0, 0, 0);
 
         await this.models.AgentSchedule.destroy({
             where: {
                 day: {
-                    [this.models.Sequelize.Op.lt]: lastMonday
+                    [this.models.Sequelize.Op.lt]: today
                 }
             }
         });

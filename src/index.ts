@@ -3,13 +3,15 @@ require('dotenv').config({path:__dirname+'/.env'})
 const express = require('express');
 const app = express();
 const db = require("./sequelize/models");
+const cookieParser = require('cookie-parser');
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded());
 
 if (process.env.NODE_ENV === 'development') {
     const cors = require('cors');
-    app.use(cors());
+    app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 }
 
 const userRouter = require('./routes/users');

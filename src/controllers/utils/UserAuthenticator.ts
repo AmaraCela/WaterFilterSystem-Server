@@ -13,7 +13,7 @@ async function getUser(req: Request) {
             return null;
         }
 
-        token = req.cookies["token"];
+        token = req.cookies["session"];
         
         if (!token) {
             return null;
@@ -150,18 +150,19 @@ export async function requireMarketingManager(req: Request, res: Response, next:
 }
 
 export async function requirePhoneOperator(req: Request, res: Response, next: any) {
+    const user = await getUser(req);
+    (<any>req).user = user;
+    
     if (skipAuth()) {
         next();
         return;
     }
-    
-    const user = await getUser(req);
+
     if (!user) {
         res.status(401).json({ message: "Unauthorized" });
         return;
     }
 
-    (<any>req).user = user;
     if (user.role == UserRole.ADMINISTRATOR || user.role == UserRole.MARKETING_MANAGER || user.role == UserRole.CHIEF_OF_OPERATIONS) {
         next();
         return;
