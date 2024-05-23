@@ -77,8 +77,7 @@ export async function addMeeting(req: Request, res: Response) {
 
 export async function updateMeeting(req: Request, res: Response) {
     const meetingRepository = new MeetingRepository(db);
-    const { meeting_id, time, place, client, phoneOperator, salesAgent, worker } = req.body;
-
+    const { meeting_id, time, place, client, successful, phoneOperator, salesAgent, worker } = req.body;
     const idInt = parseInt(meeting_id);
 
     try {
@@ -88,7 +87,8 @@ export async function updateMeeting(req: Request, res: Response) {
             return;
         }
 
-        meeting = new Meeting(time, place, client, phoneOperator, salesAgent, worker);
+        meeting = new Meeting(time, place, client, phoneOperator, salesAgent, worker, successful);
+        meeting.id = idInt;
         await meetingRepository.save(meeting);
         res.status(200).json(meeting); // TODO USE DTO
     }
