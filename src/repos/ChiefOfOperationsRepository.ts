@@ -59,7 +59,10 @@ export class ChiefOfOperationsRepository {
         let userObj = await this.models.ChiefOfOperations.findOne({
             where: {
                 chief_id: chief.id
-            }
+            },
+            include: [
+                this.models.User
+            ]
         });
 
         if (userObj != null) {
@@ -67,7 +70,7 @@ export class ChiefOfOperationsRepository {
         } else {
             userObj = await this.models.ChiefOfOperations.create(ChiefOfOperationsMapper.toPersistence(chief));
         }
-
-        return ChiefOfOperationsMapper.toDomain(userObj);
+        return userObj;
+        // return ChiefOfOperationsMapper.toDomain(userObj);
     }
 }

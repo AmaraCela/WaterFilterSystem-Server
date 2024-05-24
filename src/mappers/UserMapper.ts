@@ -5,6 +5,7 @@ import { PhoneOperator } from '../models/PhoneOperator';
 import { PhoneOperatorMapper } from './PhoneOperatorMapper';
 import { MarketingManager } from '../models/MarketingManager';
 import { SalesAgent } from '../models/SalesAgent';
+import { ChiefOfOperations } from '../models/ChiefOfOperations';
 
 export class UserMapper {
     public static toDTO(user: User): UserDTO {
@@ -44,6 +45,9 @@ export class UserMapper {
                 break;
             case UserRole.SALES_AGENT:
                 userModel = new SalesAgent(user.name, user.surname, user.email, user.passwordHash);
+                break;
+            case UserRole.CHIEF_OF_OPERATIONS:
+                userModel = new ChiefOfOperations(user.name, user.surname, user.email, user.passwordHash);
                 break;
             default:
                 throw new Error("Invalid user role");
