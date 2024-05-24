@@ -68,6 +68,7 @@ export class MarketingManagerRepository {
             userObj = await this.models.MarketingManager.create(MarketingManagerMapper.toPersistence(manager));
         }
 
-        return MarketingManagerMapper.toDomain(userObj);
+        return userObj;
+        // return MarketingManagerMapper.toDomain(userObj);
     }
 }

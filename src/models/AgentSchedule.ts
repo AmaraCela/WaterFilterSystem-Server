@@ -15,11 +15,6 @@ export class AgentSchedule {
 
     // TODO ensure no overlaps
     ensureValidSchedule() {
-        const now = new Date();
-        if (this.day < now) {
-            throw new Error("Can't create schedule in the past");
-        }
-
         const nextMonday = new Date();
         nextMonday.setDate(nextMonday.getDate() + (1 + 7 - nextMonday.getDay()) % 7);
         nextMonday.setHours(0, 0, 0, 0);
